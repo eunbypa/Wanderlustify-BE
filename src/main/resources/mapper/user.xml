@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.user.model.mapper.UserMapper">
+
+	<resultMap type="UserDto" id="user">
+		<result column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="password" property="password"/>
+		<result column="email" property="email"/>
+		<result column="isAdmin" property="isAdmin"/>
+		<result column="joinDate" property="joinDate"/>
+	</resultMap>
+
+	<select id="loginUser" parameterType="userDto" resultMap="user">
+			select id, name, isAdmin
+			from user
+			where id=#{id} and password=#{password} and flag = 0
+	</select>
+	<select id="getUserInfo" parameterType="String" resultMap="user">
+			select id,name,password,email,isAdmin,flag,joinDate
+			from user
+			where id=#{id}
+	</select>
+	
+	<insert id="joinUser" parameterType="userDto" >
+		insert into user(id,name,password,email,isAdmin,joinDate)
+		values(#{id},#{name},#{password},#{email},#{isAdmin},now())
+	</insert>
+	<sql id="search">
+		<if test="word != null and word != ''">
+			and ${key} like concat('%', #{word}, '%')
+		</if>
+	</sql>
+	<select id="getUsersInfo" parameterType="map" resultMap="user">
+		select name, id, email, joinDate
+		from user
+		where flag = 0
+		<include refid="search"></include>
+		limit #{start}, #{listsize}
+	</select>
+	
+	<update id="deleteUser" parameterType="String">
+		update user
+		set flag = 1
+		where id = #{id}
+	</update>
+	<update id="joinAgainUser" parameterType="userDto">
+		update user 
+		set name = #{name},password = #{password},email = #{email},flag = 0,joinDate = now()
+		where id = #{id}
+	</update>
+	<update id="modifyUserInfo" parameterType="userDto">
+		update user 
+		set name = #{name},password = #{password},email = #{email}
+		where id = #{id}
+	</update>
+	
+	<select id="getTotalMemberCount" parameterType="map" resultType="int">
+		select count(id)
+		from user
+		where flag = 0
+		<include refid="search"></include>
+	</select>
+</mapper>
