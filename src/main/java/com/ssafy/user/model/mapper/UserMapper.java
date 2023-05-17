@@ -18,4 +18,9 @@ public interface UserMapper {
 	void modifyUserInfo(UserDto dto)throws SQLException;
 	void joinAgainUser(UserDto userDto)throws SQLException;
 	int getTotalMemberCount(Map<String, Object> param) throws SQLException;
+	 void saveRefreshToken(Map<String, String> map) throws SQLException;
+	 Object getRefreshToken(String userid) throws SQLException;
+	 void deleteRefreshToken(Map<String, String> map) throws SQLException;
+	
+
 }

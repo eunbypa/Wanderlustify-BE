@@ -3,9 +3,12 @@ package com.ssafy.user.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.jwt.model.service.JwtServiceImpl;
 import com.ssafy.user.model.UserDto;
 import com.ssafy.user.model.service.IUserService;
 import com.ssafy.user.model.service.UserServiceImpl;
@@ -35,6 +39,11 @@ import com.ssafy.user.model.service.UserServiceImpl;
 @RequestMapping("/user")
 public class UserController {
 	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+	private static final String SUCCESS = "success";
+	private static final String FAIL = "fail";
+	
+	private JwtServiceImpl jwtService;
+
 	private IUserService uservice;
 
 	public UserController(IUserService uservice) {
@@ -59,21 +68,84 @@ public class UserController {
 
 	@PostMapping(value = "/login")
 	public ResponseEntity<?> login(@RequestBody UserDto userDto, HttpSession session, Locale locale, Model model) throws Exception {
-		logger.info("Welcome login!  {}.", userDto);
-		UserDto loginUser = uservice.loginUser(userDto);
-		if(loginUser != null) {
-			session.setAttribute("loginUser", loginUser);
-			return new ResponseEntity<UserDto>(uservice.getUserInfo(userDto.getId()), HttpStatus.OK);
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = null;
+		try {
+			UserDto loginUser = uservice.loginUser(userDto);
+			if (loginUser != null) {
+				String accessToken = jwtService.createAccessToken("userid", loginUser.getId());// key, data
+				String refreshToken = jwtService.createRefreshToken("userid", loginUser.getId());// key, data
+				uservice.saveRefreshToken(userDto.getId(), refreshToken);
+				logger.debug("로그인 accessToken 정보 : {}", accessToken);
+				logger.debug("로그인 refreshToken 정보 : {}", refreshToken);
+				resultMap.put("access-token", accessToken);
+				resultMap.put("refresh-token", refreshToken);
+				resultMap.put("message", SUCCESS);
+				status = HttpStatus.ACCEPTED;
+			} else {
+				resultMap.put("message", FAIL);
+				status = HttpStatus.ACCEPTED;
+			}
+		} catch (Exception e) {
+			logger.error("로그인 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
-		return new ResponseEntity<UserDto>(uservice.getUserInfo(userDto.getId()), HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+		
+		// logger.info("Welcome login!  {}.", userDto);
+		// UserDto loginUser = uservice.loginUser(userDto);
+		// if(loginUser != null) {
+		// 	session.setAttribute("loginUser", loginUser);
+		// 	return new ResponseEntity<UserDto>(uservice.getUserInfo(userDto.getId()), HttpStatus.OK);
+		// }
+		// return new ResponseEntity<UserDto>(uservice.getUserInfo(userDto.getId()), HttpStatus.BAD_REQUEST);
 	}
 
-	@GetMapping(value = "/logout")
-	public String logout(HttpSession session, Locale locale, Model model) throws Exception {
-		logger.info("Welcome logout!  {}.");
-		session.invalidate();
-		return "redirect:/";
+	@PostMapping("/refresh")
+	public ResponseEntity<?> refreshToken(@RequestBody UserDto memberDto, HttpServletRequest request)
+			throws Exception {
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		String token = request.getHeader("refresh-token");
+		logger.debug("token : {}, memberDto : {}", token, memberDto);
+		if (jwtService.checkToken(token)) {
+			if (token.equals(uservice.getRefreshToken(memberDto.getId()))) {
+				String accessToken = jwtService.createAccessToken("userid", memberDto.getId());
+				logger.debug("token : {}", accessToken);
+				logger.debug("정상적으로 액세스토큰 재발급!!!");
+				resultMap.put("access-token", accessToken);
+				resultMap.put("message", SUCCESS);
+				status = HttpStatus.ACCEPTED;
+			}
+		} else {
+			logger.debug("리프레쉬토큰도 사용불!!!!!!!");
+			status = HttpStatus.UNAUTHORIZED;
+		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
+
+	@GetMapping(value = "/logout/{userid}")
+	public ResponseEntity<?> removeToken(@PathVariable("userid") String userid) {
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		try {
+			uservice.deleRefreshToken(userid);
+			resultMap.put("message", SUCCESS);
+			status = HttpStatus.ACCEPTED;
+		} catch (Exception e) {
+			logger.error("로그아웃 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+
+	}
+	// public String logout(HttpSession session, Locale locale, Model model) throws Exception {
+	// 	logger.info("Welcome logout!  {}.");
+	// 	session.invalidate();
+	// 	return "redirect:/";
+	// }
 
 	@GetMapping(value = "/{userId}")
 	public ResponseEntity<?> showUserInfo(@PathVariable("userId") String userId, Locale locale, Model model) throws Exception {

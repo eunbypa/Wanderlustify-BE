@@ -44,7 +44,7 @@
 	<update id="deleteUser" parameterType="String">
 		update user
 		set flag = 1
-		where id = #{id}
+		where id = #{userId}
 	</update>
 	<update id="joinAgainUser" parameterType="userDto">
 		update user 
@@ -63,4 +63,21 @@
 		where flag = 0
 		<include refid="search"></include>
 	</select>
+
+	<select id="getRefreshToken" parameterType="string" resultType="string">
+		select token
+		from user_token
+		where id = #{userid}
+	</select>
+	
+	<update id="saveRefreshToken" parameterType="map">
+		update user_token
+		set token = #{token}
+		where id = #{userid}
+	</update>
+	
+	<delete id="deleteRefreshToken" parameterType="map">
+		delete user_token
+		where id = #{userid}
+	</delete>
 </mapper>

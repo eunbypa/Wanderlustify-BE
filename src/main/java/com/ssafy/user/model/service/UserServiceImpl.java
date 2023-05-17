@@ -117,4 +117,27 @@ public class UserServiceImpl implements IUserService {
 
 		return pageNavigation;
 	}
+
+	@Override
+	public void saveRefreshToken(String userid, String refreshToken) throws Exception {
+		// TODO Auto-generated method stub
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("userid", userid);
+		map.put("token", refreshToken);
+		userMapper.saveRefreshToken(map);
+	}
+
+	@Override
+	public Object getRefreshToken(String userid) throws Exception {
+		// TODO Auto-generated method stub
+		return userMapper.getRefreshToken(userid);
+	}
+
+	@Override
+	public void deleRefreshToken(String userid) throws Exception {
+		// TODO Auto-generated method stub
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("userid", userid);
+		userMapper.deleteRefreshToken(map);
+	}
 }

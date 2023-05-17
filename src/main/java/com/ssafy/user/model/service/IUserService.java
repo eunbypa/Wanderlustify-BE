@@ -15,4 +15,8 @@ public interface IUserService {
 	void modifyUserInfo(UserDto userDto)  throws Exception; // 회원 정보 수정
 	void deleteUser(String userId)  throws Exception; // 회원 탈퇴
 	PageNavigation makePageNavigation(Map<String, String> map) throws Exception;
+	 void saveRefreshToken(String userid, String refreshToken) throws Exception; // 리프레시 토큰 저장
+	 Object getRefreshToken(String userid) throws Exception;
+	 void deleRefreshToken(String userid) throws Exception;
+	
 }
