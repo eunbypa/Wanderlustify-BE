@@ -46,9 +46,10 @@ public class UserController {
 
 	private IUserService uservice;
 
-	public UserController(IUserService uservice) {
+	public UserController(IUserService uservice, JwtServiceImpl jwtService) {
 		super();
 		this.uservice = uservice;
+		this.jwtService = jwtService;
 	}
 
 	@PostMapping(value = "/")
@@ -73,6 +74,7 @@ public class UserController {
 		try {
 			UserDto loginUser = uservice.loginUser(userDto);
 			if (loginUser != null) {
+				logger.debug("token : {}, memberDto : {}", loginUser);
 				String accessToken = jwtService.createAccessToken("userid", loginUser.getId());// key, data
 				String refreshToken = jwtService.createRefreshToken("userid", loginUser.getId());// key, data
 				uservice.saveRefreshToken(userDto.getId(), refreshToken);
@@ -150,7 +152,21 @@ public class UserController {
 	@GetMapping(value = "/{userId}")
 	public ResponseEntity<?> showUserInfo(@PathVariable("userId") String userId, Locale locale, Model model) throws Exception {
 		logger.info("Welcome showUserInfo!  {}.");
-		return new ResponseEntity<UserDto>(uservice.getUserInfo(userId), HttpStatus.OK);
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		try {
+			UserDto userDto = uservice.getUserInfo(userId);
+			resultMap.put("message", SUCCESS);
+			resultMap.put("userInfo", userDto);
+			status = HttpStatus.ACCEPTED;
+		} catch (Exception e) {
+			logger.error("유저 정보 가져오기 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+	
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+		// return new ResponseEntity<UserDto>(uservice.getUserInfo(userId), HttpStatus.OK);
 	}
 	@PutMapping(value = "/")
 	public ResponseEntity<?> modifyUserInfo(UserDto userDto, HttpSession session, Locale locale, Model model) throws Exception {

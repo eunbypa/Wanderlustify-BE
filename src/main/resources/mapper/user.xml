@@ -67,17 +67,22 @@
 	<select id="getRefreshToken" parameterType="string" resultType="string">
 		select token
 		from user_token
-		where id = #{userid}
+		where user_id = #{userid}
 	</select>
 	
-	<update id="saveRefreshToken" parameterType="map">
+	<insert id="saveRefreshToken" parameterType="map">
+		insert into user_token
+		values(#{userid}, #{token})
+	</insert> 
+
+	<!-- <update id="saveRefreshToken" parameterType="map">
 		update user_token
 		set token = #{token}
 		where id = #{userid}
-	</update>
+	</update> -->
 	
 	<delete id="deleteRefreshToken" parameterType="map">
-		delete user_token
-		where id = #{userid}
+		delete from user_token
+		where user_id = #{userid}
 	</delete>
 </mapper>
