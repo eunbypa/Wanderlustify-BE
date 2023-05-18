@@ -18,5 +18,6 @@ public interface IUserService {
 	 void saveRefreshToken(String userid, String refreshToken) throws Exception; // 리프레시 토큰 저장
 	 Object getRefreshToken(String userid) throws Exception;
 	 void deleRefreshToken(String userid) throws Exception;
+	 void changePassword(UserDto userDto) throws Exception; // 비밀번호 변경
 	
 }

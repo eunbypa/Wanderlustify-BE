@@ -33,6 +33,13 @@
 			and ${key} like concat('%', #{word}, '%')
 		</if>
 	</sql>
+
+	<update id="changePassword" parameterType="userDto">
+		update user 
+		set password = #{password}
+		where id = #{id}
+	</update>
+	
 	<select id="getUsersInfo" parameterType="map" resultMap="user">
 		select name, id, email, joinDate
 		from user

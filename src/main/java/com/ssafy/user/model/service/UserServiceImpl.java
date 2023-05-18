@@ -69,6 +69,13 @@ public class UserServiceImpl implements IUserService {
 		if(userDto == null || userDto.getFlag() == 1) return 0; //해당 아이디로 한번도 가입한 이력이 없거나 탈퇴한 이력이 있는 경우
 		return 1;
 	}
+	
+	@Override
+	public void changePassword(UserDto userDto) throws Exception {
+		// TODO Auto-generated method stub
+		userMapper.changePassword(userDto);
+	}
+
 	@Override
 	@Transactional(readOnly = true)
 	public List<UserDto> getUsersInfo(Map<String, String> map) throws Exception{

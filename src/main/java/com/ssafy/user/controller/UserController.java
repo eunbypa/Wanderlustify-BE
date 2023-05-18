@@ -100,6 +100,22 @@ public class UserController {
 		// return new ResponseEntity<UserDto>(uservice.getUserInfo(userDto.getId()), HttpStatus.BAD_REQUEST);
 	}
 
+	@PutMapping(value = "/password")
+	public ResponseEntity<?> changePassword(@RequestBody UserDto userDto, Locale locale, Model model) throws Exception {
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = null;
+		try {
+			uservice.changePassword(userDto);
+			resultMap.put("message", SUCCESS);
+			status = HttpStatus.ACCEPTED;
+		} catch (Exception e) {
+			logger.error("비밀번호 변경 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
+
 	@PostMapping("/refresh")
 	public ResponseEntity<?> refreshToken(@RequestBody UserDto memberDto, HttpServletRequest request)
 			throws Exception {
