@@ -25,14 +25,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.jwt.model.service.JwtServiceImpl;
 import com.ssafy.user.model.UserDto;
 import com.ssafy.user.model.service.IUserService;
-import com.ssafy.user.model.service.UserServiceImpl;
 
 @RestController
 @CrossOrigin("*")
@@ -56,8 +53,7 @@ public class UserController {
 	public ResponseEntity<?> join(@RequestBody UserDto userDto, Locale locale) throws Exception {
 		logger.info("Welcome join!  {}.", userDto);
 		uservice.joinUser(userDto);
-
-		return new ResponseEntity<UserDto>(userDto, HttpStatus.OK);
+		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/check/{userId}")
@@ -149,6 +145,7 @@ public class UserController {
 	// 	return "redirect:/";
 	// }
 
+	//비밀번호는 어떻게 해야 할까
 	@GetMapping(value = "/{userId}")
 	public ResponseEntity<?> showUserInfo(@PathVariable("userId") String userId, Locale locale, Model model) throws Exception {
 		logger.info("Welcome showUserInfo!  {}.");
@@ -169,17 +166,29 @@ public class UserController {
 		// return new ResponseEntity<UserDto>(uservice.getUserInfo(userId), HttpStatus.OK);
 	}
 	@PutMapping(value = "/")
-	public ResponseEntity<?> modifyUserInfo(UserDto userDto, HttpSession session, Locale locale, Model model) throws Exception {
-		logger.info("Welcome modifyUserInfo!  {}.");
+	public ResponseEntity<?> modifyUserInfo(@RequestBody UserDto userDto, Locale locale, Model model) throws Exception {
+		logger.info("Welcome modifyUserInfo!  {}.", userDto);
 		uservice.modifyUserInfo(userDto);
-		session.setAttribute("loginUser", userDto);
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("userInfo", uservice.getUserInfo(userDto.getId()));
+		resultMap.put("message", SUCCESS);
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 	@DeleteMapping(value = "/{userId}")
-	public ResponseEntity<?> deleteUserInfo(@PathVariable("userId") String userId, HttpSession session, Locale locale, Model model) throws Exception {
+	public ResponseEntity<?> deleteUserInfo(@PathVariable("userId") String userId, Locale locale, Model model) throws Exception {
 		logger.info("Welcome deleteUserInfo!  {}.");
-		uservice.deleteUser(userId);
-		session.invalidate();
-		return new ResponseEntity<Void>(HttpStatus.OK); // 회원 탈퇴시 메인페이지로 이동
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		try {
+			uservice.deleteUser(userId);
+			uservice.deleRefreshToken(userId);
+			resultMap.put("message", SUCCESS);
+			status = HttpStatus.ACCEPTED;
+		} catch (Exception e) {
+			logger.error("회원 탈퇴 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 }
