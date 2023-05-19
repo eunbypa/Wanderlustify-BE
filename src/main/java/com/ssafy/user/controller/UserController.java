@@ -163,10 +163,12 @@ public class UserController {
 
 	//비밀번호는 어떻게 해야 할까
 	@GetMapping(value = "/{userId}")
-	public ResponseEntity<?> showUserInfo(@PathVariable("userId") String userId, Locale locale, Model model) throws Exception {
+	public ResponseEntity<?> showUserInfo(@PathVariable("userId") String userId, Locale locale, HttpServletRequest request) throws Exception {
 		logger.info("Welcome showUserInfo!  {}.");
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.ACCEPTED;
+		if (jwtService.checkToken(request.getHeader("access-token"))) {
+			logger.info("사용 가능한 토큰!!!");
 		try {
 			UserDto userDto = uservice.getUserInfo(userId);
 			resultMap.put("message", SUCCESS);
@@ -177,6 +179,11 @@ public class UserController {
 			resultMap.put("message", e.getMessage());
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
+	}else {
+		logger.error("사용 불가능 토큰!!!");
+		resultMap.put("message", FAIL);
+		status = HttpStatus.UNAUTHORIZED;
+	}
 	
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 		// return new ResponseEntity<UserDto>(uservice.getUserInfo(userId), HttpStatus.OK);

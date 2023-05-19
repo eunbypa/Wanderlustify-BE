@@ -103,6 +103,7 @@ public class BoardController {
 		logger.debug("modify boardDto : {}", boardDto);
 		boardService.update(boardDto);
 		HashMap<String,Object> result = new HashMap<String, Object>();
+		// boardDto = boardService.detail(boardDto.getArticleNo());
 		result.put("board", boardDto);
 		result.put("pgno", map.get("pgno"));
 		result.put("key", map.get("key"));

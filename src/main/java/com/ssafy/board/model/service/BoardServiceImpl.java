@@ -41,8 +41,8 @@ public class BoardServiceImpl implements IBoardService {
 		int start = pgNo * SizeConstant.LIST_SIZE - SizeConstant.LIST_SIZE;
 		param.put("start", start);
 		param.put("listsize", SizeConstant.LIST_SIZE);
-		
-		return boardMapper.boardlist(param);
+		if(map.get("type") == "notice")return boardMapper.noticelist(param); // 공지사항 
+		return boardMapper.boardlist(param); // 일반
 	}
 	
 	@Override
