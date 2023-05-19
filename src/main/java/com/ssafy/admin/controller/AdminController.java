@@ -49,7 +49,7 @@ public class AdminController {
 	@GetMapping("/users")
 	public ResponseEntity<?> user(@RequestParam Map<String, String> map) throws Exception {
 		logger.debug("list parameter pgno : {}", map.get("pgno"));
-		
+		if(map.get("pgno") == null) map.put("pgno", "1");
 		List<UserDto> list = uservice.getUsersInfo(map);
 		PageNavigation pageNavigation = uservice.makePageNavigation(map);
 		HashMap<String, Object> map2 = new HashMap<>();

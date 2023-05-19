@@ -10,8 +10,8 @@ public class PageNavigation {
 	private int currentPage; // 현재 페이지 번호
 	private int naviSize; // 네비게이션 사이즈
 	private int countPerPage; // 페이지당 글 갯수
-	private String navigator;
-
+	// private String navigator;
+	private int[] navigator;
 	public boolean isStartRange() {
 		return startRange;
 	}
@@ -68,10 +68,12 @@ public class PageNavigation {
 		this.naviSize = naviSize;
 	}
 
-	public String getNavigator() {
-		return navigator;
-	}
-
+	// public String getNavigator() {
+	// 	return navigator;
+	// }
+	public int[] getNavigator() {
+			return navigator;
+		}
 	public int getCountPerPage() {
 		return countPerPage;
 	}
@@ -80,31 +82,37 @@ public class PageNavigation {
 		this.countPerPage = countPerPage;
 	}
 
+	//기존에 html코드를 동적 생성하는 것이 vue에서 작동이 안되어서
+	//startPage 부터 endPage까지 배열로 넘겨주는 방식으로 변경함
 	public void makeNavigator() {
 		int startPage = (currentPage - 1) / naviSize * naviSize + 1;
 		int endPage = startPage + naviSize - 1;
 		if(totalPageCount < endPage)
 			endPage = totalPageCount;
-		
-		StringBuilder builder = new StringBuilder();
-		builder.append("		<ul class=\"pagination  justify-content-center\"> \n");
-		builder.append("			<li class=\"page-item\" data-pg=\"1\"> \n");
-		builder.append("				<a href=\"#\" class=\"page-link\">최신</a> \n");
-		builder.append("			</li> \n");
-		builder.append("			<li class=\"page-item\" data-pg=\"" + (this.startRange ? 1 : (startPage - 1)) + "\"> \n");
-		builder.append("				<a href=\"#\" class=\"page-link\">이전</a> \n");
-		builder.append("			</li> \n");
+		int[] list = new int[endPage-startPage+1];
 		for(int i=startPage;i<=endPage;i++) {
-			builder.append("			<li class=\"" + (currentPage == i ? "page-item active" : "page-item") + "\" data-pg=\"" + i + "\"><a href=\"#\" class=\"page-link\">" + i + "</a></li> \n");
+			list[i-startPage] = i;
 		}
-		builder.append("			<li class=\"page-item\" data-pg=\"" + (this.endRange ? endPage : (endPage + 1)) + "\"> \n");
-		builder.append("				<a href=\"#\" class=\"page-link\">다음</a> \n");
-		builder.append("			</li> \n");
-		builder.append("			<li class=\"page-item\" data-pg=\"" + totalPageCount + "\"> \n");
-		builder.append("				<a href=\"#\" class=\"page-link\">마지막</a> \n");
-		builder.append("			</li> \n");
-		builder.append("		</ul> \n");
-		this.navigator = builder.toString();
+		this.navigator=list;
+			// StringBuilder builder = new StringBuilder();
+			// builder.append("		<ul class=\"pagination  justify-content-center\"> \n");
+			// builder.append("			<li class=\"page-item\" data-pg=\"1\"> \n");
+			// builder.append("				<a href=\"#\" class=\"page-link\" v-on:click=\"pageClick("+1+")\">최신</a> \n");
+			// builder.append("			</li> \n");
+			// builder.append("			<li class=\"page-item\" data-pg=\"" + (this.startRange ? 1 : (startPage - 1)) + "\"> \n");
+			// builder.append("				<a href=\"#\" class=\"page-link\" v-on:click=\"pageClick("+(this.startRange ? 1 : (startPage - 1))+")\">이전</a> \n");
+			// builder.append("			</li> \n");
+			// for(int i=startPage;i<=endPage;i++) {
+			// 	builder.append("			<li class=\"" + (currentPage == i ? "page-item active" : "page-item") + "\" data-pg=\"" + i + "\"><a href=\"#\" class=\"page-link\" v-on:click=\"pageClick("+i+")\">" + i + "</a></li> \n");
+			// }
+			// builder.append("			<li class=\"page-item\" data-pg=\"" + (this.endRange ? endPage : (endPage + 1)) + "\"> \n");
+			// builder.append("				<a href=\"#\" class=\"page-link\" v-on:click=\"pageClick("+(this.endRange ? endPage : (endPage + 1))+")\">다음</a> \n");
+			// builder.append("			</li> \n");
+			// builder.append("			<li class=\"page-item\" data-pg=\"" + totalPageCount + "\"> \n");
+			// builder.append("				<a href=\"#\" class=\"page-link\" v-on:click=\"pageClick("+totalPageCount+")\">마지막</a> \n");
+			// builder.append("			</li> \n");
+			// builder.append("		</ul> \n");
+			// this.navigator = builder.toString();
 	}
 
 }

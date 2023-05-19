@@ -82,9 +82,9 @@ public class UserServiceImpl implements IUserService {
 		Map<String, Object> param = new HashMap<String, Object>();
 		String key = map.get("key");
 		if("userId".equals(key))
-			key = "user_id";
+			key = "id";
 		if("userName".equals(key))
-			key = "user_name";
+			key = "name";
 		param.put("key", key == null ? "" : key);
 		param.put("word", map.get("word") == null ? "" : map.get("word"));
 		int pgNo = Integer.parseInt(map.get("pgno") == null ? "1" : map.get("pgno"));
