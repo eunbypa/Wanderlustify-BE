@@ -40,13 +40,13 @@ public class CommentServiceImpl implements ICommentService {
 
 	@Override
 	@Transactional
-	public void delete(int commentNo, int articleNo) throws Exception {
+	public void delete(int commentNo) throws Exception {
 		// TODO Auto-generated method stub
 		commentMapper.delete(commentNo);
-		Map<String, Object> param = new HashMap<>();
-		param.put("count", -1);
-		param.put("articleNo", articleNo);
-		commentMapper.updateCommentCount(param); // 댓글 작성 시 게시글의 댓글 수 1 증가
+		// Map<String, Object> param = new HashMap<>();
+		// param.put("count", -1);
+		//  param.put("articleNo", articleNo);
+		// commentMapper.updateCommentCount(param); // 댓글 작성 시 게시글의 댓글 수 1 증가
 	}
 
 	@Override

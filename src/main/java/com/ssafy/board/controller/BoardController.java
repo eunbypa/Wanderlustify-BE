@@ -160,6 +160,8 @@ public class BoardController {
 		return new ResponseEntity<>(resultMap, status);
 	}
 
+
+	//수정할 필요가 있을 듯함
 	@GetMapping("/recommend/{articleNo}")
 	public ResponseEntity<?> recommend(@PathVariable("articleNo") int articleNo, @RequestParam Map<String, String> map){
 		logger.debug("recommend board : {}", articleNo);
@@ -172,6 +174,23 @@ public class BoardController {
 			status = HttpStatus.OK;
 		} catch (Exception e) {
 			logger.error("글 추천 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<>(resultMap, status);
+	}
+
+	@PutMapping("/{articleNo}")
+	public ResponseEntity<?> updateCommentCount(@PathVariable("articleNo") int articleNo){
+		logger.debug("update Comment count : {}", articleNo);
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = null;
+		try {
+			boardService.updateCommentCount(articleNo);
+			resultMap.put("message", SUCCESS);
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			logger.error("글 댓글 수 갱신실패 : {}", e);
 			resultMap.put("message", e.getMessage());
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}

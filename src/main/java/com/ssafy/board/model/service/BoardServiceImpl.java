@@ -121,5 +121,10 @@ public class BoardServiceImpl implements IBoardService {
 		boardMapper.addRecommendation(param);
 		boardMapper.updateRecommendationCount(param);
 	}
+
+	@Override
+	public void updateCommentCount(int articleNo) throws Exception {
+		boardMapper.decreaseCommentCount(articleNo);
+	}
 	
 }

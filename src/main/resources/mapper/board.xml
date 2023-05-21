@@ -66,6 +66,12 @@
 		where article_no = #{articleNo}
 	</update>
 	
+	<update id="decreaseCommentCount" parameterType="int">
+		update board
+		set comment = comment - 1
+		where article_no = #{articleNo}
+	</update>
+
 	<update id="updateRecommendationCount" parameterType="map">
 		update board
 		set recommendation = recommendation + 1

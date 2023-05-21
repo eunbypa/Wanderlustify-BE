@@ -97,12 +97,12 @@ public class CommentController {
 	}
 
 	@DeleteMapping("/{commentno}")
-	public ResponseEntity<?> delete(@PathVariable("commentno") int commentNo, @RequestParam("articleNo") int articleNo){
-		logger.debug("delete commentNo : {}", articleNo);
+	public ResponseEntity<?> delete(@PathVariable("commentno") int commentNo){
+		logger.debug("delete commentNo : {}", commentNo);
 		HttpStatus status = null;
 		HashMap<String,Object> resultMap = new HashMap<String, Object>();
 		try {
-			commentService.delete(commentNo, articleNo);
+			commentService.delete(commentNo);
 			resultMap.put("message", SUCCESS);
 			status = HttpStatus.OK;
 		} catch (Exception e) {
