@@ -8,6 +8,8 @@ public class BoardDto {
 	private String subject;
 	private String content;
 	private int hit;
+	private int recommendation;
+	private int comment;
 	private String date;
 	private int isnotice;
 	
@@ -74,11 +76,29 @@ public class BoardDto {
 	public void setIsnotice(int isnotice) {
 		this.isnotice = isnotice;
 	}
+
+	
+	public Object getRecommendation() {
+		return this.recommendation;
+	}
+
+	public void setRecommendation(int recommendation) {
+		this.recommendation = recommendation;
+	};
+
+	public Object getComment() {
+		return this.comment;
+	}
+
+	public void setComment(int comment) {
+		this.comment = comment;
+	};
 	
 	@Override
 	public String toString() {
 		return "BoardDto [articleNo=" + articleNo + ", userId=" + userId + ", userName=" + userName + ", subject="
-				+ subject + ", content=" + content + ", hit=" + hit + ", date=" + date + "]";
+				+ subject + ", content=" + content + ", hit=" + hit + ", recommendation=" + recommendation +
+				 ", comment=" + comment +", date=" + date + "]";
 	}
 	
 }

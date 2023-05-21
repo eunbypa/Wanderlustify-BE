@@ -27,5 +27,7 @@ public interface BoardMapper {
 
 	void delete(int article_no) throws SQLException;
 	
+	void updateRecommendationCount(Map<String, Object> param) throws SQLException;
 
+	void addRecommendation(Map<String, Object> param) throws SQLException;
 }

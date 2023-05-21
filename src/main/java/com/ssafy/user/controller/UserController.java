@@ -1,3 +1,7 @@
+
+
+
+
 package com.ssafy.user.controller;
 
 import java.io.IOException;
@@ -50,21 +54,36 @@ public class UserController {
 	}
 
 	@PostMapping(value = "/")
-	public ResponseEntity<?> join(@RequestBody UserDto userDto, Locale locale) throws Exception {
+	public ResponseEntity<?> join(@RequestBody UserDto userDto, Locale locale) {
 		logger.info("Welcome join!  {}.", userDto);
-		uservice.joinUser(userDto);
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		HttpStatus status = null;
+		try {
+			uservice.joinUser(userDto);
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			logger.error("회원가입 실패 : {}", e);
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<>(status);
 	}
 
 	@GetMapping(value = "/check/{userId}")
-	public ResponseEntity<?> checkId(@PathVariable("userId") String userId, Locale locale, Model model) throws Exception {
+	public ResponseEntity<?> checkId(@PathVariable("userId") String userId, Locale locale) {
 		logger.info("Welcome checkId!  {}.", userId);
-		int cnt = uservice.checkId(userId);
-		return new ResponseEntity<Integer>(cnt, HttpStatus.OK);
+		HttpStatus status = null;
+		int cnt = 0;
+		try {
+			cnt = uservice.checkId(userId);
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			logger.error("아이디 중복 검사 실패 : {}", e);
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<>(cnt, status);
 	}
 
 	@PostMapping(value = "/login")
-	public ResponseEntity<?> login(@RequestBody UserDto userDto, HttpSession session, Locale locale, Model model) throws Exception {
+	public ResponseEntity<?> login(@RequestBody UserDto userDto,Locale locale) {
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = null;
 		try {
@@ -73,6 +92,7 @@ public class UserController {
 				logger.debug("token : {}, memberDto : {}", loginUser);
 				String accessToken = jwtService.createAccessToken("userid", loginUser.getId());// key, data
 				String refreshToken = jwtService.createRefreshToken("userid", loginUser.getId());// key, data
+				uservice.deleRefreshToken(userDto.getId()); // 토큰이 중복되지 않도록 삭제 후 삽입
 				uservice.saveRefreshToken(userDto.getId(), refreshToken);
 				logger.debug("로그인 accessToken 정보 : {}", accessToken);
 				logger.debug("로그인 refreshToken 정보 : {}", refreshToken);
@@ -101,7 +121,7 @@ public class UserController {
 	}
 
 	@PutMapping(value = "/password")
-	public ResponseEntity<?> changePassword(@RequestBody UserDto userDto, Locale locale, Model model) throws Exception {
+	public ResponseEntity<?> changePassword(@RequestBody UserDto userDto, Locale locale) {
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = null;
 		try {
@@ -189,16 +209,24 @@ public class UserController {
 		// return new ResponseEntity<UserDto>(uservice.getUserInfo(userId), HttpStatus.OK);
 	}
 	@PutMapping(value = "/")
-	public ResponseEntity<?> modifyUserInfo(@RequestBody UserDto userDto, Locale locale, Model model) throws Exception {
+	public ResponseEntity<?> modifyUserInfo(@RequestBody UserDto userDto, Locale locale) {
 		logger.info("Welcome modifyUserInfo!  {}.", userDto);
-		uservice.modifyUserInfo(userDto);
 		Map<String, Object> resultMap = new HashMap<>();
-		resultMap.put("userInfo", uservice.getUserInfo(userDto.getId()));
-		resultMap.put("message", SUCCESS);
-		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+		HttpStatus status = null;
+		try {
+			uservice.modifyUserInfo(userDto);
+			resultMap.put("userInfo", uservice.getUserInfo(userDto.getId()));
+			resultMap.put("message", SUCCESS);
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			logger.error("유저 정보 가져오기 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<>(resultMap, status);
 	}
 	@DeleteMapping(value = "/{userId}")
-	public ResponseEntity<?> deleteUserInfo(@PathVariable("userId") String userId, Locale locale, Model model) throws Exception {
+	public ResponseEntity<?> deleteUserInfo(@PathVariable("userId") String userId, Locale locale) {
 		logger.info("Welcome deleteUserInfo!  {}.");
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.ACCEPTED;

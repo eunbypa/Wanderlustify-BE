@@ -36,7 +36,9 @@ import com.ssafy.util.PageNavigation;
 public class BoardController {
 
 	private final Logger logger = LoggerFactory.getLogger(BoardController.class);
-
+	private static final String SUCCESS = "success";
+	private static final String FAIL = "fail";
+	
 	private IBoardService boardService;
 
 	public BoardController(IBoardService boardService) {
@@ -53,79 +55,127 @@ public class BoardController {
 	 */
 
 	@PostMapping("/")
-	public ResponseEntity<?> write(BoardDto boardDto, HttpSession session,
-			RedirectAttributes redirectAttributes) throws Exception {
+	public ResponseEntity<?> write(@RequestBody BoardDto boardDto) {
 		logger.debug("write boardDto : {}", boardDto);
-		UserDto userDto = (UserDto) session.getAttribute("loginUser");
-		boardDto.setUserId(userDto.getId());
-		boardService.write(boardDto);
-		HashMap<String,Object> result = new HashMap<String, Object>();
-		result.put("pgno", "1");
-		result.put("key", "");
-		result.put("word", "");
-		/*
-		 * redirectAttributes.addAttribute("pgno", "1");
-		 * redirectAttributes.addAttribute("key", "");
-		 * redirectAttributes.addAttribute("word", "");
-		 */
-		return new ResponseEntity<>(result, HttpStatus.OK);
+		HttpStatus status = null;
+		try {
+			boardService.write(boardDto);
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			logger.error("글쓰기 실패 : {}", e);
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<>(status);
 	}
 
 	@GetMapping("/")
-	public ResponseEntity<?> list(@RequestParam Map<String, String> map) throws Exception {
-		logger.debug("list parameter pgno : {}", map.get("pgno"));
-		List<BoardDto> list = boardService.boardlist(map);
-		PageNavigation pageNavigation = boardService.makePageNavigation(map);
-		HashMap<String,Object> result = new HashMap<String, Object>();
-		result.put("list", list);
-		result.put("navigation", pageNavigation);
-		result.put("pgno", map.get("pgno"));
-		result.put("key", map.get("key"));
-		result.put("word", map.get("word"));
-		return new ResponseEntity<>(result, HttpStatus.OK);
+	public ResponseEntity<?> list(@RequestParam Map<String, String> map) {
+		logger.debug("list parameter pgno : {}", map);
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = null;
+		List<BoardDto> list = null;
+		try {
+			list = boardService.boardlist(map);
+			PageNavigation pageNavigation = boardService.makePageNavigation(map);
+			resultMap.put("list",list);
+			resultMap.put("type",map.get("type"));
+			resultMap.put("navigation", pageNavigation);
+			resultMap.put("pgno", map.get("pgno"));
+			resultMap.put("key", map.get("key"));
+			resultMap.put("word", map.get("word"));
+			resultMap.put("message", SUCCESS);
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			logger.error("글 목록 불러오기 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<>(resultMap, status);
 	}
 
 	@GetMapping("/{articleno}")
-	public ResponseEntity<?> view(@PathVariable("articleno") int articleNo, @RequestParam Map<String, String> map)
-			throws Exception {
-		BoardDto boardDto = boardService.detail(articleNo);
+	public ResponseEntity<?> view(@PathVariable("articleno") int articleNo, @RequestParam Map<String, String> map) {
+		logger.debug("view articleNo : {}", articleNo);
+		BoardDto boardDto = null;
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = null;
+		try {
+			boardDto = boardService.detail(articleNo);
+			resultMap.put("board", boardDto);
+			resultMap.put("pgno", map.get("pgno"));
+			resultMap.put("key", map.get("key"));
+			resultMap.put("word", map.get("word"));
+			resultMap.put("message", SUCCESS);
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			logger.error("글 상세보기 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
 		logger.debug("view board : {}", boardDto);
-		HashMap<String,Object> result = new HashMap<String, Object>();
-		result.put("board", boardDto);
-		result.put("pgno", map.get("pgno"));
-		result.put("key", map.get("key"));
-		result.put("word", map.get("word"));
-		return new ResponseEntity<>(result, HttpStatus.OK);
+		return new ResponseEntity<>(resultMap, status);
 	}
 
 	@PutMapping("/")
-	public ResponseEntity<?> modify(@RequestBody BoardDto boardDto, @RequestParam Map<String, String> map) throws Exception {
+	public ResponseEntity<?> modify(@RequestBody BoardDto boardDto, @RequestParam Map<String, String> map){
 		logger.debug("modify boardDto : {}", boardDto);
-		boardService.update(boardDto);
-		HashMap<String,Object> result = new HashMap<String, Object>();
-		// boardDto = boardService.detail(boardDto.getArticleNo());
-		result.put("board", boardDto);
-		result.put("pgno", map.get("pgno"));
-		result.put("key", map.get("key"));
-		result.put("word", map.get("word"));
-		return new ResponseEntity<>(result, HttpStatus.OK);
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = null;
+		try {
+			boardService.update(boardDto);
+			boardDto = boardService.detail(boardDto.getArticleNo());
+			resultMap.put("board", boardDto);
+			resultMap.put("pgno", map.get("pgno"));
+			resultMap.put("key", map.get("key"));
+			resultMap.put("word", map.get("word"));
+			resultMap.put("message", SUCCESS);
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			logger.error("글 수정 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<>(resultMap, status);
 	}
 
+	//글 삭제 map 매핑 관련 처리..
 	@DeleteMapping("/{articleno}")
-	public ResponseEntity<?> delete(@PathVariable("articleno") int articleNo, @RequestParam Map<String, String> map
-			) throws Exception {
+	public ResponseEntity<?> delete(@PathVariable("articleno") int articleNo, @RequestParam Map<String, String> map) {
 		logger.debug("delete articleNo : {}", articleNo);
-		boardService.delete(articleNo);
-		HashMap<String,Object> result = new HashMap<String, Object>();
-		result.put("pgno", map.get("pgno"));
-		result.put("key", map.get("key"));
-		result.put("word", map.get("word"));
-		/*
-		 * redirectAttributes.addAttribute("pgno", map.get("pgno"));
-		 * redirectAttributes.addAttribute("key", map.get("key"));
-		 * redirectAttributes.addAttribute("word", map.get("word"));
-		 */
-		return new ResponseEntity<>(result, HttpStatus.OK);
+		// logger.debug("delete articleNo : {}", map);
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = null;
+		try {
+			boardService.delete(articleNo);
+			// resultMap.put("pgno", map.get("pgno"));
+			// resultMap.put("key", map.get("key"));
+			// resultMap.put("word", map.get("word"));
+			resultMap.put("message", SUCCESS);
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			logger.error("글 삭제 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<>(resultMap, status);
+	}
+
+	@GetMapping("/recommend/{articleNo}")
+	public ResponseEntity<?> recommend(@PathVariable("articleNo") int articleNo, @RequestParam Map<String, String> map){
+		logger.debug("recommend board : {}", articleNo);
+		logger.debug("recommend board : {}", map);
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = null;
+		try {
+			boardService.recommend(articleNo, map.get("userId"));
+			resultMap.put("message", SUCCESS);
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			logger.error("글 추천 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<>(resultMap, status);
 	}
 
 }

@@ -47,30 +47,43 @@ public class AdminController {
 	}
 	
 	@GetMapping("/users")
-	public ResponseEntity<?> user(@RequestParam Map<String, String> map) throws Exception {
+	public ResponseEntity<?> getUsers(@RequestParam Map<String, String> map){
 		logger.debug("list parameter pgno : {}", map.get("pgno"));
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = null;
 		if(map.get("pgno") == null) map.put("pgno", "1");
-		List<UserDto> list = uservice.getUsersInfo(map);
-		PageNavigation pageNavigation = uservice.makePageNavigation(map);
-		HashMap<String, Object> map2 = new HashMap<>();
-		map2.put("pgno", map.get("pgno"));
-		map2.put("key",map.get("key"));
-		map2.put("word",map.get("word"));
-		map2.put("users", list);
-		map2.put("navigation", pageNavigation);
-		return new ResponseEntity<>(map2, HttpStatus.OK);
+		List<UserDto> list = null;
+		try {
+			list = uservice.getUsersInfo(map);
+			PageNavigation pageNavigation = uservice.makePageNavigation(map);
+			resultMap.put("pgno", map.get("pgno"));
+			resultMap.put("key",map.get("key"));
+			resultMap.put("word",map.get("word"));
+			resultMap.put("users", list);
+			resultMap.put("navigation", pageNavigation);
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			logger.error("회원 목록 불러오기 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<>(resultMap, status);
 	}
 	
 	
 	@DeleteMapping("/{userId}")
-	public ResponseEntity<?> deleteUserInfo(@PathVariable("userId") String userId, Model model) throws Exception {
+	public ResponseEntity<?> deleteUserInfo(@PathVariable("userId") String userId) {
 		logger.info("Welcome deleteUser!  {}.");
-		uservice.deleteUser(userId);
-		HashMap<String, Object> map = new HashMap<>();
-		map.put("pgno", 1);
-		map.put("key","");
-		map.put("word","");
-		return new ResponseEntity<>(map, HttpStatus.OK);
+		HttpStatus status = null;
+		try {
+			uservice.deleteUser(userId);
+			uservice.deleRefreshToken(userId);
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			logger.error("관리자 회원 강제 탈퇴 실패 : {}", e);
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<>(status);
 		// return "redirect:/admin/user?pgno=1&key=&word=";
 	}
 	

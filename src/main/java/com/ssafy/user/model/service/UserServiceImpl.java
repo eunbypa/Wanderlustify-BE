@@ -100,8 +100,9 @@ public class UserServiceImpl implements IUserService {
 
 		int naviSize = SizeConstant.NAVIGATION_SIZE;
 		int sizePerPage = SizeConstant.LIST_SIZE;
-		int currentPage = Integer.parseInt(map.get("pgno"));
-
+		int pgNo = Integer.parseInt(map.get("pgno") == null ? "1" : map.get("pgno"));
+		int currentPage = pgNo;
+		pageNavigation.setCountPerPage(sizePerPage);
 		pageNavigation.setCurrentPage(currentPage);
 		pageNavigation.setNaviSize(naviSize);
 		Map<String, Object> param = new HashMap<String, Object>();

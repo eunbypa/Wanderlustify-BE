@@ -11,13 +11,15 @@
 		<result column="subject" property="subject"/>
 		<result column="content" property="content"/>
 		<result column="hit" property="hit"/>
+		<result column="recommendation" property="recommendation"/>
+		<result column="comment" property="comment"/>
 		<result column="date" property="date"/>
 		<result column="isnotice" property="isnotice"/>
 	</resultMap>
 
 	<insert id="write" parameterType="boardDto">
-		insert into board (user_id, subject, content, hit, date, isnotice)
-		values (#{userId}, #{subject}, #{content}, 0, now(), #{isnotice})
+		insert into board (user_id, subject, content, hit, recommendation, comment, date, isnotice)
+		values (#{userId}, #{subject}, #{content}, 0, 0, 0, now(), #{isnotice})
 	</insert>
 
 	<sql id="search">
@@ -27,16 +29,16 @@
 	</sql>
 
 	<select id="boardlist" parameterType="map" resultMap="board">
-		select b.article_no, b.user_id, b.subject, b.content, b.hit, b.date, b.isnotice, u.name
+		select b.article_no, b.user_id, b.subject, b.content, b.hit, b.recommendation, b.comment, b.date, b.isnotice, u.name
 		from board b, user u
-		where b.user_id = u.id
+		where b.user_id = u.id and b.isnotice = 0
 		<include refid="search"></include>
 		order by b.article_no desc
 		limit #{start}, #{listsize}
 	</select>
 	
 	<select id="noticelist" parameterType="map" resultMap="board">
-		select b.article_no, b.user_id, b.subject, b.content, b.hit, b.date, b.isnotice, u.name
+		select b.article_no, b.user_id, b.subject, b.content, b.hit, b.recommendation, b.comment, b.date, b.isnotice, u.name
 		from board b, user u 
 		where b.user_id =u.id and b.isnotice = 1
 		<include refid="search"></include>
@@ -47,13 +49,12 @@
 	<select id="getTotalArticleCount" parameterType="map" resultType="int">
 		select count(article_no)
 		from board
-		<where>
+		where isnotice = #{isnotice}
 			<include refid="search"></include>
-		</where>
 	</select>
 	
 	<select id="detail" parameterType="int" resultMap="board">
-		select b.article_no, b.user_id, b.subject, b.content, b.hit, b.date, b.isnotice, u.name 
+		select b.article_no, b.user_id, b.subject, b.content, b.hit, b.recommendation, b.comment, b.date, b.isnotice, u.name 
 		from board b, user u
 		where b.user_id = u.id
 		and b.article_no = #{articleNo}
@@ -64,6 +65,17 @@
 		set hit = hit + 1
 		where article_no = #{articleNo}
 	</update>
+	
+	<update id="updateRecommendationCount" parameterType="map">
+		update board
+		set recommendation = recommendation + 1
+		where article_no = #{articleNo}
+	</update>
+
+	<insert id="addRecommendation" parameterType="map">
+		insert into recommendation (article_no, user_id)
+		values (#{articleNo}, #{userId})
+	</insert>
 	
 	<update id="update" parameterType="boardDto">
 		update board

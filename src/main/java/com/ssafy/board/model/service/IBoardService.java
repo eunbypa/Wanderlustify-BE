@@ -16,5 +16,5 @@ public interface IBoardService {
 	BoardDto detail(int articleNo) throws Exception;
 	void delete(int articleNo) throws Exception;
 	void update(BoardDto boardDto) throws Exception;
-	
+	void recommend(int articleNo, String userId) throws Exception;
 }
