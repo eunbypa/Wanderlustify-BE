@@ -15,4 +15,5 @@ public interface IHotPlaceService {
 	void delete(int hotplaceNo) throws Exception;
 	void update(HotPlaceDto hotplaceDto) throws Exception;
 	void recommend(int hotplaceNo) throws Exception;
+    void writeFile(Map<String, Object> params);
 }

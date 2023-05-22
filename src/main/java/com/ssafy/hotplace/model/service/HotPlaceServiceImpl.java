@@ -107,4 +107,10 @@ public class HotPlaceServiceImpl implements IHotPlaceService {
 		hotplaceMapper.updateRecommendationCount(hotplaceNo);
 	}
 
+	@Override
+	public void writeFile(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		hotplaceMapper.writeFile(params);
+	}
+
 }
