@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.hotplace.model.mapper.HotPlaceMapper">
+
+	<resultMap type="HotPlaceDto" id="hotplace">
+		<result column="hotplace_no" property="hotplaceNo"/>
+		<result column="user_id" property="userId"/>
+		<result column="name" property="userName"/>
+		<result column="title" property="subject"/>
+		<result column="content" property="content"/>
+		<result column="address" property="address"/>
+		<result column="recommendation" property="recommendation"/>
+		<result column="save_folder" property="saveFolder"/>
+		<result column="original_file" property="originalFile"/>
+		<result column="save_file" property="saveFile"/>
+	</resultMap>
+
+	<insert id="write" parameterType="HotPlaceDto">
+		insert into hotplace (user_id, title, content, address, save_folder, original_file, save_file)
+		values (#{userId}, #{title}, #{content}, #{address}, #{saveFolder}, #{originalFile}, #{saveFile})
+	</insert>
+
+	<sql id="search">
+		<if test="word != null and word != ''">
+			and ${key} like concat('%', #{word}, '%')
+		</if>
+	</sql>
+
+	<select id="hotplaceList" parameterType="map" resultMap="hotplace">
+		select h.hotplace_no, h.user_id, h.title, h.content, h.address, h.recommendation, h.save_folder, h.original_file, h.save_file, u.name
+		from hotplace h, user u
+		where h.user_id = u.id
+		<include refid="search"></include>
+		order by b.article_no desc
+		limit #{start}, #{listsize}
+	</select>
+	
+	<select id="getTotalCount" parameterType="map" resultType="int">
+		select count(hotplace_no)
+		from hotplace
+		<where>
+			<include refid="search"></include>
+		</where>
+	</select>
+	<select id="getTotalCountWithJoin" parameterType="map" resultType="int">
+		select count(hotplace_no)
+		from hotplace h, user u
+		where h.user_id =u.id
+			<include refid="search"></include>
+	</select>
+	
+	<select id="detail" parameterType="int" resultMap="hotplace">
+		select h.hotplace_no, h.user_id, h.title, h.content, h.address, h.recommendation, h.save_folder, h.original_file, h.save_file, u.name
+		from hotplace h, user u
+		where h.user_id = u.id
+		and h.hotplace_no = #{hotplaceNo}
+	</select>
+
+	<update id="updateRecommendationCount" parameterType="int">
+		update hotplace
+		set recommendation = recommendation + 1
+		where hotplace_no = #{hotplaceNo}
+	</update>
+	
+	<update id="update" parameterType="HotPlaceDto">
+		update hotplace
+		set title = #{title}, content = #{content}, address=#{address}, save_folder = #{saveFolder}, original_file = #{originalFile}, save_file = #{saveFile} 
+		where hotplace_no = #{hotplaceNo}
+	</update>
+	
+	<delete id="delete" parameterType="int">
+		delete from hotplace
+		where hotplace_no = #{hotplaceNo}
+	</delete>
+
+</mapper>

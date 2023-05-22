@@ -1,0 +1,21 @@
+package com.ssafy.hotplace.model.mapper;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.ssafy.hotplace.model.HotPlaceDto;
+
+@Mapper
+public interface HotPlaceMapper {
+	void write(HotPlaceDto hotplaceDto) throws SQLException;
+	List<HotPlaceDto> hotplaceList(Map<String, Object> param) throws SQLException;
+	int getTotalCount(Map<String, Object> param) throws SQLException;
+	int getTotalCountWithJoin(Map<String, Object> param) throws SQLException;
+	HotPlaceDto detail(int hotplaceNo) throws SQLException;
+	void updateRecommendationCount(int hotplaceNo) throws SQLException;
+	void update(HotPlaceDto hotplaceDto) throws SQLException;
+	void delete(int hotplaceNo) throws SQLException;
+}

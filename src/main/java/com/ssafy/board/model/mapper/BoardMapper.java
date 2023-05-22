@@ -18,6 +18,7 @@ public interface BoardMapper {
 	List<BoardDto> noticelist(Map<String, Object> param) throws SQLException;
 	
 	int getTotalArticleCount(Map<String, Object> param) throws SQLException;
+	int getTotalArticleCountWithJoin(Map<String, Object> param) throws SQLException;
 	
 	BoardDto detail(int article_no) throws SQLException;
 

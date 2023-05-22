@@ -52,6 +52,13 @@
 		where isnotice = #{isnotice}
 			<include refid="search"></include>
 	</select>
+	<select id="getTotalArticleCountWithJoin" parameterType="map" resultType="int">
+		select count(article_no)
+		from board b, user u
+		where b.user_id =u.id
+			and	isnotice = #{isnotice}
+			<include refid="search"></include>
+	</select>
 	
 	<select id="detail" parameterType="int" resultMap="board">
 		select b.article_no, b.user_id, b.subject, b.content, b.hit, b.recommendation, b.comment, b.date, b.isnotice, u.name 

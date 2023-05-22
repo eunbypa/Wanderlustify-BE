@@ -33,8 +33,8 @@ public class BoardServiceImpl implements IBoardService {
 	public List<BoardDto> boardlist(Map<String, String> map) throws Exception {
 		Map<String, Object> param = new HashMap<String, Object>();
 		String key = map.get("key");
-		if("userid".equals(key))
-			key = "b.user_id";
+		if("username".equals(key))
+			key = "u.name";
 		param.put("key", key == null ? "" : key);
 		param.put("word", map.get("word") == null ? "" : map.get("word"));
 		int pgNo = Integer.parseInt(map.get("pgno") == null ? "1" : map.get("pgno"));
@@ -58,12 +58,14 @@ public class BoardServiceImpl implements IBoardService {
 		pageNavigation.setNaviSize(naviSize);
 		Map<String, Object> param = new HashMap<String, Object>();
 		String key = map.get("key");
-		if ("userid".equals(key))
-			key = "user_id";
+		if ("username".equals(key))
+			key = "name";
 		param.put("key", key == null ? "" : key);
 		param.put("word", map.get("word") == null ? "" : map.get("word"));
 		param.put("isnotice", map.get("type").equals("notice") ? 1 : 0);
-		int totalCount = boardMapper.getTotalArticleCount(param);
+		int totalCount;
+		if ("name".equals(key)) totalCount = boardMapper.getTotalArticleCountWithJoin(param);
+		else totalCount = boardMapper.getTotalArticleCount(param);
 		pageNavigation.setTotalCount(totalCount);
 		int totalPageCount = (totalCount - 1) / sizePerPage + 1;
 		pageNavigation.setTotalPageCount(totalPageCount);
