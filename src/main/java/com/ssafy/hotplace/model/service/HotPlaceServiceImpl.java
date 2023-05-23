@@ -65,7 +65,7 @@ public class HotPlaceServiceImpl implements IHotPlaceService {
 		param.put("key", key == null ? "" : key);
 		param.put("word", map.get("word") == null ? "" : map.get("word"));
 		int totalCount;
-		if ("name".equals(key)) totalCount = hotplaceMapper.getTotalCountWithJoin(param);
+		if ("u.name".equals(key)) totalCount = hotplaceMapper.getTotalCountWithJoin(param);
 		else totalCount = hotplaceMapper.getTotalCount(param);
 		pageNavigation.setTotalCount(totalCount);
 		int totalPageCount = (totalCount - 1) / sizePerPage + 1;

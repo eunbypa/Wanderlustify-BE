@@ -148,4 +148,9 @@ public class UserServiceImpl implements IUserService {
 		map.put("userid", userid);
 		userMapper.deleteRefreshToken(map);
 	}
+
+	@Override
+	public UserDto findEmail(String userId) {
+		return userMapper.findEmail(userId);
+	}
 }

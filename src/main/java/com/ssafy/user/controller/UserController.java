@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.email.EmailService;
 import com.ssafy.jwt.model.service.JwtServiceImpl;
 import com.ssafy.user.model.UserDto;
 import com.ssafy.user.model.service.IUserService;
@@ -44,7 +46,8 @@ public class UserController {
 	private static final String FAIL = "fail";
 	
 	private JwtServiceImpl jwtService;
-
+	@Autowired
+	private EmailService emailService;
 	private IUserService uservice;
 
 	public UserController(IUserService uservice, JwtServiceImpl jwtService) {
@@ -80,6 +83,27 @@ public class UserController {
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
 		return new ResponseEntity<>(cnt, status);
+	}
+
+	@GetMapping(value = "/find/password/{userId}")
+	public ResponseEntity<?> findPassword(@PathVariable("userId") String userId, Locale locale) {
+		logger.info("Welcome find password! {}.", userId);
+		HttpStatus status = null;
+		UserDto userDto = new UserDto();
+		try {
+			userDto = uservice.findEmail(userId);
+			if(userDto.getEmail()!=null){
+				String msg = "회원님의 비밀번호는 "+userDto.getPassword()+" 입니다.";
+				logger.info("Welcome find password! {}.", userDto.getEmail());
+				logger.info("Welcome find password! {}.", msg);
+				emailService.send(userDto.getEmail(), "비밀번호 안내", msg );
+			}
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			logger.error("비밀번호 찾기 실패 : {}", e);
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<>(status);
 	}
 
 	@PostMapping(value = "/login")

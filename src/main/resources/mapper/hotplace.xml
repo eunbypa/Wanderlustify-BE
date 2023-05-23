@@ -11,6 +11,7 @@
 		<result column="title" property="title"/>
 		<result column="content" property="content"/>
 		<result column="address" property="address"/>
+		<result column="date" property="date"/>
 		<result column="recommendation" property="recommendation"/>
 		<result column="save_folder" property="saveFolder"/>
 		<result column="original_file" property="originalFile"/>
@@ -29,7 +30,7 @@
 	</sql>
 
 	<select id="hotplaceList" parameterType="map" resultMap="hotplace">
-		select h.hotplace_no, h.user_id, h.title, h.content, h.address, h.recommendation, h.save_folder, h.original_file, h.save_file, u.name
+		select h.hotplace_no, h.user_id, h.title, h.content, h.address, h.recommendation, h.save_folder, h.original_file, h.save_file, h.date, u.name
 		from hotplace h, user u
 		where h.user_id = u.id
 		<include refid="search"></include>
@@ -52,7 +53,7 @@
 	</select>
 	
 	<select id="detail" parameterType="int" resultMap="hotplace">
-		select h.hotplace_no, h.user_id, h.title, h.content, h.address, h.recommendation, h.save_folder, h.original_file, h.save_file, u.name
+		select h.hotplace_no, h.user_id, h.title, h.content, h.address, h.recommendation, h.save_folder, h.original_file, h.save_file, h.date, u.name
 		from hotplace h, user u
 		where h.user_id = u.id
 		and h.hotplace_no = #{hotplaceNo}

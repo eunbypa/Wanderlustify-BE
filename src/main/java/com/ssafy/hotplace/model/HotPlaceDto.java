@@ -11,6 +11,7 @@ public class HotPlaceDto {
     private String saveFolder;
     private String originalFile;
     private String saveFile;
+	private String date;
 	public int getHotplaceNo() {
 		return hotplaceNo;
 	}
@@ -65,6 +66,12 @@ public class HotPlaceDto {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	}
 	public int getRecommendation() {
 		return recommendation;
 	}
@@ -74,7 +81,7 @@ public class HotPlaceDto {
 	@Override
 	public String toString() {
 		return "HotPlaceDto [hotplaceNo=" + hotplaceNo + ", userId=" + userId + ", userName=" + userName + ", title="
-				+ title + ", content=" + content + ", address=" + address + ", recommendation=" + recommendation
+				+ title + ", content=" + content + ", address=" + address + ", date =" + date + ", recommendation=" + recommendation
 				+ ", saveFolder=" + saveFolder + ", originalFile=" + originalFile + ", saveFile=" + saveFile + "]";
 	}
     

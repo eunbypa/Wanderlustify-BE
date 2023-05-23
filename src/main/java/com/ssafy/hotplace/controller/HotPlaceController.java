@@ -278,10 +278,9 @@ public class HotPlaceController {
 
 
 	//수정할 필요가 있을 듯함
-	@GetMapping("/recommend/{hotplaceNo}")
-	public ResponseEntity<?> recommend(@PathVariable("hotplaceNo") int hotplaceNo, @RequestParam Map<String, String> map){
+	@PutMapping("/recommend/{hotplaceNo}")
+	public ResponseEntity<?> recommend(@PathVariable("hotplaceNo") int hotplaceNo){
 		logger.debug("recommend hotplace : {}", hotplaceNo);
-		logger.debug("recommend hotplace : {}", map);
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = null;
 		try {

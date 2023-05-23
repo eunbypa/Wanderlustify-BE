@@ -19,5 +19,6 @@ public interface IUserService {
 	 Object getRefreshToken(String userid) throws Exception;
 	 void deleRefreshToken(String userid) throws Exception;
 	 void changePassword(UserDto userDto) throws Exception; // 비밀번호 변경
+    UserDto findEmail(String userId);
 	
 }

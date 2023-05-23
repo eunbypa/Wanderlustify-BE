@@ -22,6 +22,7 @@ public interface UserMapper {
 	 Object getRefreshToken(String userid) throws SQLException;
 	 void deleteRefreshToken(Map<String, String> map) throws SQLException;
 	 void changePassword(UserDto userDto);
+    UserDto findEmail(String userId);
 	
 
 }
