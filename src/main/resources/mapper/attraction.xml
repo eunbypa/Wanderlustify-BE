@@ -7,17 +7,36 @@
 	<resultMap type="MyTripDto" id="trip">
 		<result column="content_id" property="content_id"/>
 		<result column="user_id" property="user_id"/>
+		<result column="user_mytrip_no" property="user_mytrip_no"/>
 	</resultMap>
 
 	<insert id="addAttraction" parameterType="MyTripDto">
-		insert into mytrip (content_id, user_id)
-		values (#{content_id}, #{user_id})
+		insert into mytrip (content_id, user_id, user_mytrip_no)
+		values (#{content_id}, #{user_id}, #{user_mytrip_no})
 	</insert>
 
 
-	<select id="getMyAttractions" parameterType="String" resultType="String">
-		select content_id from mytrip where user_id = #{user_id}
+	<select id="getMyAttractions" parameterType="MyTripDto" resultType="String">
+		select content_id from mytrip where user_id = #{user_id} and user_mytrip_no = #{user_mytrip_no}
 	</select>
+
+
+
+
+	<select id="getMyTripMax" parameterType="String" resultType="int">
+		select user_mytrip_no from mytrip 
+		where user_id = #{user_id} 
+		order by user_mytrip_no desc limit 1
+	</select>
+
+
+	<select id="getMyTripAll" parameterType="String" resultType="int">
+		select user_mytrip_no 
+		from mytrip 
+		where user_id = #{user_id} 
+		group by user_mytrip_no
+	</select>
+
 	
 
 </mapper>
