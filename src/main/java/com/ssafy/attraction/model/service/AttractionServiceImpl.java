@@ -19,20 +19,28 @@ public class AttractionServiceImpl implements IAttractionService {
         this.adao = adao;
     }
 
-    @Override
-	public List<AttractionDto> getAttractions(int sido_code, int contentTypeId, int gugunCode) throws Exception {
-		return adao.getAttractions(sido_code, contentTypeId, gugunCode);
-	}
 
 	@Override
-	public List<String> getMyAttractions(String user_id) throws Exception {
-		return adao.getMyAttractions(user_id);
+	public List<String> getMyAttractions(MyTripDto mdto) throws Exception {
+		return adao.getMyAttractions(mdto);
 	}
 	
 
 	@Override
 	public boolean addAttraction(MyTripDto mdto) throws Exception {
 		return adao.addAttraction(mdto);
+	}
+
+
+	@Override
+	public int getMyTripMax(String id) throws Exception {
+		return adao.getMyTripMax(id);
+	}
+
+
+	@Override
+	public List<Integer> getMyTripAll(String id) throws Exception {
+		return adao.getMyTripAll(id);
 	}
 	
 

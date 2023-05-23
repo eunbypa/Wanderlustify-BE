@@ -22,6 +22,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,24 +52,39 @@ public class AttractionController {
     }
 
 
-	@GetMapping("/addMyTrip")
-	public ResponseEntity<?> addMyTrip(@RequestParam String contentId, HttpSession session) throws Exception {
+	@PostMapping("/addMyTrip")
+	public ResponseEntity<?> addMyTrip(@RequestBody MyTripDto myTripDto, HttpSession session) throws Exception {
 		logger.info("Welcome addmytrip! .");
-		UserDto userinfo = (UserDto) session.getAttribute("loginUser");
-		System.out.println(contentId);
-		aservice.addAttraction(new MyTripDto(Integer.parseInt(contentId), userinfo.getId()));
+		aservice.addAttraction(myTripDto);
 		return new ResponseEntity<>(HttpStatus.OK);
 
 	}
 
 
-	@GetMapping("/getMyTrip")
-	public ResponseEntity<?> getMyTrip(HttpSession session) throws Exception {
-		UserDto userinfo = (UserDto) session.getAttribute("loginUser");
-		List<String> list = aservice.getMyAttractions(userinfo.getId());
+	@GetMapping("/getMyTrip/{id}/{user_mytrip_no}")
+	public ResponseEntity<?> getMyTrip(@PathVariable("id") String id, @PathVariable("user_mytrip_no") int user_mytrip_no  ,HttpSession session) throws Exception {
+		List<String> list = aservice.getMyAttractions(new MyTripDto(id, user_mytrip_no));
 		logger.info("Welcome getMytrip {}", list);
-
 		return new ResponseEntity<List<String>>(list, HttpStatus.OK);
+	}
+
+	// 유저가 등록한 여행계획 중 가장 큰 번호
+	@GetMapping("/getMyTripMax/{id}")
+	public ResponseEntity<?> getMyTripMax(@PathVariable("id") String id) throws Exception {
+		int max = aservice.getMyTripMax(id);
+		logger.info("Welcome getMyTripMax {}", max);
+
+		return new ResponseEntity<Integer>(max, HttpStatus.OK);
+		
+	}
+
+	// 유저가 등록한 여행계획
+	@GetMapping("/getMyTripAll/{id}")
+	public ResponseEntity<?> getMyTripCount(@PathVariable("id") String id) throws Exception { 
+		List<Integer> list = aservice.getMyTripAll(id);
+		logger.info("Welcome getMyTripAll {}", list);
+
+		return new ResponseEntity<List<Integer>>(list, HttpStatus.OK);
 	}
 
 

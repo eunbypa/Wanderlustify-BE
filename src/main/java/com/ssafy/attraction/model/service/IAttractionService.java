@@ -2,12 +2,12 @@ package com.ssafy.attraction.model.service;
 
 import java.util.List;
 
-import com.ssafy.attraction.model.AttractionDto;
 import com.ssafy.attraction.model.MyTripDto;
 
 public interface IAttractionService {
-	List<AttractionDto> getAttractions(int sido_code, int contentTypeId, int gugunCode) throws Exception;
-	List<String> getMyAttractions(String user_id) throws Exception;
+	List<String> getMyAttractions(MyTripDto mdto) throws Exception;
 	boolean addAttraction(MyTripDto mdto) throws Exception;
+	int getMyTripMax(String id) throws Exception;
+	List<Integer> getMyTripAll(String id) throws Exception;
 
 }
