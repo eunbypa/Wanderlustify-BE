@@ -8,7 +8,7 @@
 		<result column="hotplace_no" property="hotplaceNo"/>
 		<result column="user_id" property="userId"/>
 		<result column="name" property="userName"/>
-		<result column="title" property="subject"/>
+		<result column="title" property="title"/>
 		<result column="content" property="content"/>
 		<result column="address" property="address"/>
 		<result column="recommendation" property="recommendation"/>
@@ -17,7 +17,7 @@
 		<result column="save_file" property="saveFile"/>
 	</resultMap>
 
-	<insert id="write" parameterType="HotPlaceDto">
+	<insert id="write" parameterType="HotPlaceDto" useGeneratedKeys="true" keyProperty="hotplaceNo">
 		insert into hotplace (user_id, title, content, address, save_folder, original_file, save_file)
 		values (#{userId}, #{title}, #{content}, #{address}, #{saveFolder}, #{originalFile}, #{saveFile})
 	</insert>
@@ -33,7 +33,7 @@
 		from hotplace h, user u
 		where h.user_id = u.id
 		<include refid="search"></include>
-		order by b.article_no desc
+		order by h.hotplace_no desc
 		limit #{start}, #{listsize}
 	</select>
 	
@@ -57,6 +57,12 @@
 		where h.user_id = u.id
 		and h.hotplace_no = #{hotplaceNo}
 	</select>
+
+	<update id="writeFile" parameterType="map">
+		update hotplace
+		set save_folder = #{saveFolder}, original_file = #{originalFile}, save_file = #{saveFile} 
+		where hotplace_no = #{hotplaceNo}
+	</update>
 
 	<update id="updateRecommendationCount" parameterType="int">
 		update hotplace
