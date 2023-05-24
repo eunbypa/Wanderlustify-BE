@@ -11,5 +11,6 @@ public interface IAttractionService {
 	List<Integer> getMyTripAll(String id) throws Exception;
     void deleteMyTripAll(MyTripDto myTripDto) throws Exception;
 	void deleteMyTrip(int no) throws Exception;
+    void addMyTripAll(MyTripDto[] list) throws Exception;
 
 }

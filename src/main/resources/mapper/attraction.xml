@@ -16,6 +16,7 @@
 	</insert>
 
 
+
 	<select id="getMyAttractions" parameterType="MyTripDto" resultType="MyTripDto">
 		select content_id, user_mytrip_no, no
 		from mytrip 
@@ -53,6 +54,7 @@
 		from mytrip
 		where no = #{no}
 	</delete>
+
 
 
 </mapper>

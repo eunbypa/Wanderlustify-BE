@@ -53,10 +53,20 @@ public class AttractionController {
     }
 
 
+	// 나의 여행계획 추가 (1개)
 	@PostMapping("/addMyTrip")
 	public ResponseEntity<?> addMyTrip(@RequestBody MyTripDto myTripDto, HttpSession session) throws Exception {
 		logger.info("Welcome addmytrip! .");
 		aservice.addAttraction(myTripDto);
+		return new ResponseEntity<>(HttpStatus.OK);
+
+	}
+
+	// 나의 여행계획 추가 (전체)
+	@PostMapping("/addMyTripAll")
+	public ResponseEntity<?> addMyTripAll(@RequestBody MyTripDto[] list) throws Exception {
+		logger.info("Welcome addmytripAll! .");
+		aservice.addMyTripAll(list);
 		return new ResponseEntity<>(HttpStatus.OK);
 
 	}
