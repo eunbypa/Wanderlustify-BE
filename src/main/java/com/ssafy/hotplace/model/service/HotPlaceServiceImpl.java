@@ -38,13 +38,20 @@ public class HotPlaceServiceImpl implements IHotPlaceService {
 		String key = map.get("key");
 		if("username".equals(key))
 			key = "name";
+		param.put("sort", map.get("sort"));
 		param.put("key", key == null ? "" : key);
 		param.put("word", map.get("word") == null ? "" : map.get("word"));
 		int pgNo = Integer.parseInt(map.get("pgno") == null ? "1" : map.get("pgno"));
-		int start = pgNo * SizeConstant.LIST_SIZE - SizeConstant.LIST_SIZE;
+		int start = pgNo * SizeConstant.HOT_PLACE_LIST_SIZE - SizeConstant.HOT_PLACE_LIST_SIZE;
 		param.put("start", start);
-		param.put("listsize", SizeConstant.LIST_SIZE);
+		param.put("listsize", SizeConstant.HOT_PLACE_LIST_SIZE);
 		return hotplaceMapper.hotplaceList(param);
+	}
+	@Override
+	@Transactional(readOnly = true)
+	public List<HotPlaceDto> hotplaceTOP3() throws Exception {
+		
+		return hotplaceMapper.hotplaceTOP3();
 	}
 
 	@Override
@@ -52,7 +59,7 @@ public class HotPlaceServiceImpl implements IHotPlaceService {
 		PageNavigation pageNavigation = new PageNavigation();
 
 		int naviSize = SizeConstant.NAVIGATION_SIZE;
-		int sizePerPage = SizeConstant.LIST_SIZE;
+		int sizePerPage = SizeConstant.HOT_PLACE_LIST_SIZE;
 		int pgNo = Integer.parseInt(map.get("pgno") == null ? "1" : map.get("pgno"));
 		int currentPage = pgNo;
 		pageNavigation.setCountPerPage(sizePerPage);
@@ -108,7 +115,7 @@ public class HotPlaceServiceImpl implements IHotPlaceService {
 	}
 
 	@Override
-	public void writeFile(Map<String, Object> params) {
+	public void writeFile(Map<String, Object> params) throws Exception{
 		// TODO Auto-generated method stub
 		hotplaceMapper.writeFile(params);
 	}

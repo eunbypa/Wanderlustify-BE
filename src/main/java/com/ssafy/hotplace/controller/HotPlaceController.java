@@ -167,24 +167,15 @@ public class HotPlaceController {
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = null;
 		List<HotPlaceDto> list = null;
+		List<HotPlaceDto> top3 = null;
 		try {
 			list = hotplaceService.hotplaceList(map);
-            // List<UrlResource> fileURLs = new ArrayList<>(); // 핫플레이스 리스트 각각에 해당하는 이미지 경로 리스트
-            // for(HotPlaceDto h : list){ // 각 핫플레이스 게시글 마다 이미지 경로 가져오는 코드
-            //     if (!h.getOriginalFile().isEmpty()) { // 업로드한 파일이 존재하면
-            //         String realPath = servletContext.getRealPath("/upload");
-            //         // String realPath = servletContext.getRealPath("/resources/img");
-            //         String today = h.getSaveFolder(); // 저장된 폴더 이름
-            //         String saveFolder = realPath + File.separator + today; // 전체 경로 찾기 위함
-            //         logger.debug("저장 폴더 : {}", saveFolder);
-            //         String path = saveFolder + File.separator + h.getSaveFile();
-            //         fileURLs.add(new UrlResource(path));
-            //     }
-            // }
+            top3 = hotplaceService.hotplaceTOP3();
 			PageNavigation pageNavigation = hotplaceService.makePageNavigation(map);
 			resultMap.put("list",list);
-            // resultMap.put("urls",fileURLs);
+            resultMap.put("top3", top3);
 			resultMap.put("navigation", pageNavigation);
+			resultMap.put("sort", map.get("sort"));
 			resultMap.put("pgno", map.get("pgno"));
 			resultMap.put("key", map.get("key"));
 			resultMap.put("word", map.get("word"));
