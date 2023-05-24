@@ -18,5 +18,6 @@ public interface HotPlaceMapper {
 	void updateRecommendationCount(int hotplaceNo) throws SQLException;
 	void update(HotPlaceDto hotplaceDto) throws SQLException;
 	void delete(int hotplaceNo) throws SQLException;
-    void writeFile(Map<String, Object> params);
+    void writeFile(Map<String, Object> params) throws SQLException;
+	List<HotPlaceDto> hotplaceTOP3() throws SQLException;
 }
