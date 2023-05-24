@@ -21,7 +21,7 @@ public class AttractionServiceImpl implements IAttractionService {
 
 
 	@Override
-	public List<String> getMyAttractions(MyTripDto mdto) throws Exception {
+	public List<MyTripDto> getMyAttractions(MyTripDto mdto) throws Exception {
 		return adao.getMyAttractions(mdto);
 	}
 	
@@ -41,6 +41,18 @@ public class AttractionServiceImpl implements IAttractionService {
 	@Override
 	public List<Integer> getMyTripAll(String id) throws Exception {
 		return adao.getMyTripAll(id);
+	}
+
+
+	@Override
+	public void deleteMyTripAll(MyTripDto myTripDto) throws Exception {
+		adao.deleteMyTripAll(myTripDto);
+	}
+
+
+	@Override
+	public void deleteMyTrip(int no) throws Exception {
+		adao.deleteMyTrip(no);
 	}
 	
 

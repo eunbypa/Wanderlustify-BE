@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -63,9 +64,9 @@ public class AttractionController {
 
 	@GetMapping("/getMyTrip/{id}/{user_mytrip_no}")
 	public ResponseEntity<?> getMyTrip(@PathVariable("id") String id, @PathVariable("user_mytrip_no") int user_mytrip_no  ,HttpSession session) throws Exception {
-		List<String> list = aservice.getMyAttractions(new MyTripDto(id, user_mytrip_no));
+		List<MyTripDto> list = aservice.getMyAttractions(new MyTripDto(id, user_mytrip_no));
 		logger.info("Welcome getMytrip {}", list);
-		return new ResponseEntity<List<String>>(list, HttpStatus.OK);
+		return new ResponseEntity<List<MyTripDto>>(list, HttpStatus.OK);
 	}
 
 	// 유저가 등록한 여행계획 중 가장 큰 번호
@@ -85,6 +86,21 @@ public class AttractionController {
 		logger.info("Welcome getMyTripAll {}", list);
 
 		return new ResponseEntity<List<Integer>>(list, HttpStatus.OK);
+	}
+
+	// 유저가 여행계획 삭제(전체)
+	@DeleteMapping("/deleteMyTripAll/{id}/{trip_no}")
+	public ResponseEntity<?> deleteMyTripAll(@PathVariable("id") String id, @PathVariable("trip_no") int trip_no) throws Exception {
+		aservice.deleteMyTripAll(new MyTripDto(id, trip_no));
+		return new ResponseEntity<>(HttpStatus.OK);
+
+	}
+
+	// 유저가 여행계획 삭제(개별)
+	@DeleteMapping("/deleteMyTrip/{no}")
+	public ResponseEntity<?> deleteMyTrip(@PathVariable("no") int no) throws Exception {
+		aservice.deleteMyTrip(no);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 

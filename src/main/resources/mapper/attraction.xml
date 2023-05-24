@@ -16,8 +16,11 @@
 	</insert>
 
 
-	<select id="getMyAttractions" parameterType="MyTripDto" resultType="String">
-		select content_id from mytrip where user_id = #{user_id} and user_mytrip_no = #{user_mytrip_no}
+	<select id="getMyAttractions" parameterType="MyTripDto" resultType="MyTripDto">
+		select content_id, user_mytrip_no, no
+		from mytrip 
+		where user_id = #{user_id} 
+		and user_mytrip_no = #{user_mytrip_no}
 	</select>
 
 
@@ -37,6 +40,19 @@
 		group by user_mytrip_no
 	</select>
 
-	
+
+	<delete id="deleteMyTripAll" parameterType="MyTripDto">
+		delete 
+		from mytrip
+		where user_id = #{user_id} 
+		and user_mytrip_no = #{user_mytrip_no}
+	</delete>
+
+	<delete id="deleteMyTrip" parameterType="int">
+		delete
+		from mytrip
+		where no = #{no}
+	</delete>
+
 
 </mapper>

@@ -4,6 +4,7 @@ public class MyTripDto {
 	private int content_id;
 	private String user_id;
 	private int user_mytrip_no; 
+	private int no;
 	public MyTripDto() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -16,7 +17,25 @@ public class MyTripDto {
         this.user_mytrip_no = user_mytrip_no;
     }
 
+
 	
+
+	
+
+
+    public MyTripDto(int content_id, int no) {
+		this.content_id = content_id;
+		this.no = no;
+	}
+
+	
+
+
+	public MyTripDto(int content_id, int user_mytrip_no, int no) {
+        this.content_id = content_id;
+        this.user_mytrip_no = user_mytrip_no;
+        this.no = no;
+    }
 
 
     public MyTripDto(String user_id, int user_mytrip_no) {
@@ -44,11 +63,23 @@ public class MyTripDto {
 		this.user_mytrip_no = user_mytrip_no;
 	}
 
+	
+
 
     @Override
     public String toString() {
         return "MyTripDto [content_id=" + content_id + ", user_id=" + user_id + ", user_mytrip_no=" + user_mytrip_no
                 + "]";
+    }
+
+
+    public int getNo() {
+        return no;
+    }
+
+
+    public void setNo(int no) {
+        this.no = no;
     }
 
 	
