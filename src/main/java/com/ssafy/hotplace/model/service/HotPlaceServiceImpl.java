@@ -1,5 +1,6 @@
 package com.ssafy.hotplace.model.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,18 @@ public class HotPlaceServiceImpl implements IHotPlaceService {
 		param.put("listsize", SizeConstant.HOT_PLACE_LIST_SIZE);
 		return hotplaceMapper.hotplaceList(param);
 	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<HotPlaceDto> getRecommendList(String userId) throws Exception {
+		List<HotPlaceDto> recList = new ArrayList<>();
+		List<HotPlaceDto> noList = hotplaceMapper.recommendList(userId); // 좋아요 누른 목록 key 받아오기
+		for(HotPlaceDto h : noList){
+			recList.add(hotplaceMapper.detail(h.getHotplaceNo()));
+		}
+		return recList;
+	}
+
 	@Override
 	@Transactional(readOnly = true)
 	public List<HotPlaceDto> hotplaceTOP3() throws Exception {
@@ -109,8 +122,12 @@ public class HotPlaceServiceImpl implements IHotPlaceService {
 
 	@Override
 	@Transactional
-	public void recommend(int hotplaceNo) throws Exception {
+	public void recommend(int hotplaceNo, String userId) throws Exception {
 		// TODO Auto-generated method stub
+		Map<String, Object> param = new HashMap<>();
+		param.put("hotplaceNo", hotplaceNo);
+		param.put("userId", userId);
+		hotplaceMapper.addRecommendation(param);
 		hotplaceMapper.updateRecommendationCount(hotplaceNo);
 	}
 

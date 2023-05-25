@@ -42,6 +42,7 @@
 		<include refid="search"></include>
 		limit #{start}, #{listsize}
 	</select>
+
 	<select id="hotplaceTOP3" resultMap="hotplace">
 		select h.hotplace_no, h.user_id, h.title, h.content, h.address, h.recommendation, h.save_folder, h.original_file, h.save_file, h.date, u.name
 		from hotplace h, user u
@@ -49,6 +50,17 @@
 		order by h.recommendation desc
 		limit 3
 	</select>
+	
+	<select id="recommendList" parameterType="String" resultMap="hotplace">
+		select distinct hotplace_no
+		from recommendation_hotplace
+		where user_id = #{userId}
+	</select>
+
+	<insert id="addRecommendation" parameterType="map">
+		insert into recommendation_hotplace (hotplace_no, user_id)
+		values (#{hotplaceNo}, #{userId})
+	</insert>
 	
 	<select id="getTotalCount" parameterType="map" resultType="int">
 		select count(hotplace_no)

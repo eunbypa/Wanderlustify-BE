@@ -189,6 +189,31 @@ public class HotPlaceController {
 		return new ResponseEntity<>(resultMap, status);
 	}
 
+	@GetMapping("/list/recommend/{userId}")
+	public ResponseEntity<?> recommendList(@PathVariable("userId") String userId) {
+		logger.debug("recommend hotplace list parameter id : {}", userId);
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = null;
+		List<HotPlaceDto> list = null;
+		try {
+			list = hotplaceService.getRecommendList(userId);
+			// PageNavigation pageNavigation = hotplaceService.makePageNavigation(map);
+			resultMap.put("list",list);
+			// resultMap.put("navigation", pageNavigation);
+			// resultMap.put("sort", map.get("sort"));
+			// resultMap.put("pgno", map.get("pgno"));
+			// resultMap.put("key", map.get("key"));
+			// resultMap.put("word", map.get("word"));
+			resultMap.put("message", SUCCESS);
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			logger.error("핫플레이스 추천한 목록 불러오기 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<>(resultMap, status);
+	}
+
 	@GetMapping("/{hotplaceno}")
 	public ResponseEntity<?> view(@PathVariable("hotplaceno") int hotplaceNo, @RequestParam Map<String, String> map) {
 		logger.debug("view hotplaceNo : {}", hotplaceNo);
@@ -267,23 +292,39 @@ public class HotPlaceController {
 		return new ResponseEntity<>(resultMap, status);
 	}
 
-
-	//수정할 필요가 있을 듯함
-	@PutMapping("/recommend/{hotplaceNo}")
-	public ResponseEntity<?> recommend(@PathVariable("hotplaceNo") int hotplaceNo){
-		logger.debug("recommend hotplace : {}", hotplaceNo);
-		Map<String, Object> resultMap = new HashMap<>();
-		HttpStatus status = null;
-		try {
-			hotplaceService.recommend(hotplaceNo);
-			resultMap.put("message", SUCCESS);
-			status = HttpStatus.OK;
-		} catch (Exception e) {
-			logger.error("핫플레이스  추천 실패 : {}", e);
-			resultMap.put("message", e.getMessage());
-			status = HttpStatus.INTERNAL_SERVER_ERROR;
-		}
-		return new ResponseEntity<>(resultMap, status);
+//수정할 필요가 있을 듯함
+@GetMapping("/recommend/{hotplaceNo}")
+public ResponseEntity<?> recommend(@PathVariable("hotplaceNo") int hotplaceNo, @RequestParam Map<String, String> map){
+	logger.debug("recommend hotplace : {}", hotplaceNo);
+	Map<String, Object> resultMap = new HashMap<>();
+	HttpStatus status = null;
+	try {
+		hotplaceService.recommend(hotplaceNo, map.get("userId"));
+		resultMap.put("message", SUCCESS);
+		status = HttpStatus.OK;
+	} catch (Exception e) {
+		logger.error("핫플레이스  추천 실패 : {}", e);
+		resultMap.put("message", e.getMessage());
+		status = HttpStatus.INTERNAL_SERVER_ERROR;
 	}
+	return new ResponseEntity<>(resultMap, status);
+}
+	// //수정할 필요가 있을 듯함
+	// @PutMapping("/recommend/{hotplaceNo}")
+	// public ResponseEntity<?> recommend(@PathVariable("hotplaceNo") int hotplaceNo){
+	// 	logger.debug("recommend hotplace : {}", hotplaceNo);
+	// 	Map<String, Object> resultMap = new HashMap<>();
+	// 	HttpStatus status = null;
+	// 	try {
+	// 		hotplaceService.recommend(hotplaceNo);
+	// 		resultMap.put("message", SUCCESS);
+	// 		status = HttpStatus.OK;
+	// 	} catch (Exception e) {
+	// 		logger.error("핫플레이스  추천 실패 : {}", e);
+	// 		resultMap.put("message", e.getMessage());
+	// 		status = HttpStatus.INTERNAL_SERVER_ERROR;
+	// 	}
+	// 	return new ResponseEntity<>(resultMap, status);
+	// }
 
 }
