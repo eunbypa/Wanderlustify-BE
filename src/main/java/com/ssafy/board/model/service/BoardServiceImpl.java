@@ -35,6 +35,7 @@ public class BoardServiceImpl implements IBoardService {
 		String key = map.get("key");
 		if("username".equals(key))
 			key = "u.name";
+		param.put("sort", map.get("sort"));
 		param.put("key", key == null ? "" : key);
 		param.put("word", map.get("word") == null ? "" : map.get("word"));
 		int pgNo = Integer.parseInt(map.get("pgno") == null ? "1" : map.get("pgno"));

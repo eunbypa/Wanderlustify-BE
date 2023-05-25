@@ -79,6 +79,7 @@ public class BoardController {
 			PageNavigation pageNavigation = boardService.makePageNavigation(map);
 			resultMap.put("list",list);
 			resultMap.put("type",map.get("type"));
+			resultMap.put("sort",map.get("sort"));
 			resultMap.put("navigation", pageNavigation);
 			resultMap.put("pgno", map.get("pgno"));
 			resultMap.put("key", map.get("key"));

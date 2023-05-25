@@ -26,6 +26,12 @@
 		<if test="word != null and word != ''">
 			and ${key} like concat('%', #{word}, '%')
 		</if>
+		<if test="sort != null and sort != 'date'">
+			 order by ${sort} desc
+		</if>
+		<if test="sort != null and sort == 'date'">
+			 order by date
+		</if>
 	</sql>
 
 	<select id="boardlist" parameterType="map" resultMap="board">
@@ -33,7 +39,6 @@
 		from board b, user u
 		where b.user_id = u.id and b.isnotice = 0
 		<include refid="search"></include>
-		order by b.article_no desc
 		limit #{start}, #{listsize}
 	</select>
 	
@@ -42,7 +47,6 @@
 		from board b, user u 
 		where b.user_id =u.id and b.isnotice = 1
 		<include refid="search"></include>
-		order by b.article_no desc
 		limit #{start}, #{listsize}
 	</select>
 	
