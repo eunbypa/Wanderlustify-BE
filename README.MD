@@ -104,7 +104,6 @@ HTTP/1.1 200 OK<br>
 ```
   - - Response Example<br>
   HTTP Status: 200 (OK)<br>
-<br>
 - 아이디 중복 확인<br>
   - URL: /user/check/{userId}<br>
   - Method: GET<br>
