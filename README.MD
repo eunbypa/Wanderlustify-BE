@@ -73,7 +73,6 @@ Content-Type: application/json<br>
 - 요청<br>
 HTTP/1.1 200 OK<br>
 Content-Type: application/json<br>
-<br>
 ```
 DELETE /admin/1234
 ```
