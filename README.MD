@@ -1,29 +1,30 @@
 # [Wanderlustify]
 ## 1. AdminController <br>
 <br>
-회원 목록 조회 API<br>
-엔드포인트: GET /admin/users<br>
-요청 매개변수:<br>
+# 회원 목록 조회 API<br>
+- 엔드포인트: GET /admin/users<br>
+- 요청 매개변수:<br>
 pgno (선택적): 페이지 번호 (기본값: 1)<br>
 key (선택적): 검색 키워드<br>
 word (선택적): 검색어<br>
-응답:<br>
+- 응답:<br>
 성공 (HTTP 상태코드 200):<br>
 pgno: 현재 페이지 번호<br>
 key: 검색 키워드<br>
 word: 검색어<br>
 users: 회원 목록<br>
 navigation: 페이지 네비게이션 정보<br>
-서버 오류 (HTTP 상태코드 500):<br>
+- 서버 오류 (HTTP 상태코드 500):<br>
 message: 오류 메시지<br>
-회원 정보 삭제 API<br>
-엔드포인트: DELETE /admin/{userId}<br>
-경로 변수:<br>
+<br>
+# 회원 정보 삭제 API<br>
+- 엔드포인트: DELETE /admin/{userId}<br>
+- 경로 변수:<br>
 userId: 삭제할 회원의 ID<br>
-응답:<br>
+- 응답:<br>
 성공 (HTTP 상태코드 200)<br>
-서버 오류 (HTTP 상태코드 500)<br>
-예시:<br>
+- 서버 오류 (HTTP 상태코드 500)<br>
+- 예시:<br>
 <br>
 회원 목록 조회 API 예시<br>
 요청<br>
@@ -33,7 +34,7 @@ Copy code<br>
 ```
 GET /admin/users?pgno=1&key=&word=
 ```
-응답
+- 응답
 
 bash<br>
 Copy code<br>
@@ -67,7 +68,7 @@ Content-Type: application/json<br>
 ```
 
 회원 정보 삭제 API 예시<br>
-요청<br>
+- 요청<br>
 
 bash<br>
 Copy code<br>
@@ -75,15 +76,15 @@ HTTP/1.1 200 OK<br>
 Content-Type: application/json<br>
 <br>
 DELETE /admin/1234<br>
-응답<br>
+- 응답<br>
 
 Copy code<br>
 HTTP/1.1 200 OK<br>
-위의 예시는 API 엔드포인트, HTTP 메서드, 요청 및 응답 형식, 매개변수, 응답 상태코드 등을 명시한 API 문서입니다. 실제 사용할 요청과 응답 형식은 해당 API의 비즈니스 로직과 요구사항에 맞게 작성하시면 됩니다.
 
 ## 2. UserController <br>
 
 User API 문서<br>
+
 회원 가입<br>
 URL: /user/<br>
 Method: POST<br>
