@@ -43,6 +43,13 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- 롬복 -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.16</version>
+			<scope>provided</scope>
+		</dependency>
 		
 		<!-- Datasource를 사용하기 위해 commons-dbcp2를 추가한다. -->
 		<dependency>
