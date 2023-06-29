@@ -1,7 +1,7 @@
-# [Wanderlustify] - 백엔드
+# [Wanderlustify] - 백엔드 코드 리팩토링
 ## :cupid: **목표**
 |완료 시 체크|목표|설명|
-|------|---|---|
+|:---:|---|---|
 |:white_large_square:|서버 단 데이터 유효성 검증|@Valid, BindingResult 등 사용해보기|
 |:white_large_square:|스프링 데이터 JPA|Mybatis를 JPA로 변경해보기|
 |:white_large_square:|스프링 시큐리티|스프링 시큐리티 & OAuth 적용해보기|
