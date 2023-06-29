@@ -1,4 +1,20 @@
-# [Wanderlustify] 
+# [Wanderlustify] - 백엔드
+## :cupid: **목표**
+|완료 시 체크|목표|설명|
+|------|---|---|
+|:white_large_square:|서버 단 데이터 유효성 검증|@Valid, BindingResult 등 사용해보기|
+|:white_large_square:|스프링 데이터 JPA|Mybatis를 JPA로 변경해보기|
+|:white_large_square:|스프링 시큐리티|스프링 시큐리티 & OAuth 적용해보기|
+|:white_large_square:|TDD|JUnit TEST 적용 및 테스트 케이스 작성해보기|
+|:white_large_square:|Swagger|Swagger로 API 문서 정리하기|
+|:white_large_square:|코딩 컨벤션|비즈니스 단, 레포지토리 단 함수명 작성법 등 코딩 컨벤션 통일|
+|:white_large_square:|롬복|롬복 적용해보기|
+|:white_large_square:|HTTP Status|상황에 알맞은 HTTP Status로 고치기|
+|:white_large_square:|빌더 패턴|빌더 패턴으로 변경해보기|
+|향후 학습 필요한 내용이 떠오를 때마다 추가 예정:fire:|||
+
+:boom:시간 날 때마다 조금씩 차근차근 시도해보자:boom:
+
 ## :page_facing_up: **API 명세서**
 <br>
 
