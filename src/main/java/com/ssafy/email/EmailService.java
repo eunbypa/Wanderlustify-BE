@@ -6,10 +6,12 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class EmailService {
 
-    @Autowired
     private JavaMailSender javaMailSender;
 
 

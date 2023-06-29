@@ -37,7 +37,10 @@ import com.ssafy.jwt.model.service.JwtServiceImpl;
 import com.ssafy.user.model.UserDto;
 import com.ssafy.user.model.service.IUserService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
+@RequiredArgsConstructor
 @CrossOrigin("*")
 @RequestMapping("/user")
 public class UserController {
@@ -45,16 +48,9 @@ public class UserController {
 	private static final String SUCCESS = "success";
 	private static final String FAIL = "fail";
 	
-	private JwtServiceImpl jwtService;
-	@Autowired
-	private EmailService emailService;
-	private IUserService uservice;
-
-	public UserController(IUserService uservice, JwtServiceImpl jwtService) {
-		super();
-		this.uservice = uservice;
-		this.jwtService = jwtService;
-	}
+	private final JwtServiceImpl jwtService;
+	private final EmailService emailService;
+	private final IUserService uservice;
 
 	@PostMapping(value = "/")
 	public ResponseEntity<?> join(@RequestBody UserDto userDto, Locale locale) {

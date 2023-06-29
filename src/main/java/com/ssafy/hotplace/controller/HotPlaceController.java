@@ -59,7 +59,6 @@ public class HotPlaceController {
 	private IHotPlaceService hotplaceService;
 
 	public HotPlaceController(ServletContext servletContext, IHotPlaceService hotplaceService) {
-		super();
         this.servletContext = servletContext;
 		this.hotplaceService = hotplaceService;
 	}

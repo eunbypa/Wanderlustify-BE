@@ -10,15 +10,15 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ssafy.comment.model.CommentDto;
 import com.ssafy.comment.model.mapper.CommentMapper;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class CommentServiceImpl implements ICommentService {
 
-	private CommentMapper commentMapper;
+	private final CommentMapper commentMapper;
 	
-	public CommentServiceImpl(CommentMapper commentMapper) {
-		super();
-		this.commentMapper = commentMapper;
-	}
+
 
 	@Override
 	@Transactional

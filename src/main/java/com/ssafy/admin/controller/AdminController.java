@@ -34,17 +34,15 @@ import com.ssafy.user.model.service.IUserService;
 import com.ssafy.user.model.service.UserServiceImpl;
 import com.ssafy.util.PageNavigation;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
+@RequiredArgsConstructor
 @CrossOrigin("*")
 @RequestMapping("/admin")
 public class AdminController {
 	private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
-	private IUserService uservice;
-
-	public AdminController(IUserService uservice) {
-		super();
-		this.uservice = uservice;
-	}
+	private final IUserService uservice;
 	
 	@GetMapping("/users")
 	public ResponseEntity<?> getUsers(@RequestParam Map<String, String> map){
@@ -73,7 +71,7 @@ public class AdminController {
 	
 	@DeleteMapping("/{userId}")
 	public ResponseEntity<?> deleteUserInfo(@PathVariable("userId") String userId) {
-		logger.info("Welcome deleteUser!  {}.");
+		logger.info("Welcome deleteUser!  {}.", userId);
 		HttpStatus status = null;
 		try {
 			uservice.deleteUser(userId);

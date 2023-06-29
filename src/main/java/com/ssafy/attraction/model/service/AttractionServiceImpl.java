@@ -10,56 +10,54 @@ import com.ssafy.attraction.model.AttractionDto;
 import com.ssafy.attraction.model.MyTripDto;
 import com.ssafy.attraction.model.mapper.AttractionMapper;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class AttractionServiceImpl implements IAttractionService {
 	
-	private AttractionMapper adao;
-	
-	@Autowired
-	public AttractionServiceImpl(AttractionMapper adao) {
-        this.adao = adao;
-    }
+	private final AttractionMapper attractionMapper;
 
 
 	@Override
 	@Transactional
-	public List<MyTripDto> getMyAttractions(MyTripDto mdto) throws Exception {
-		return adao.getMyAttractions(mdto);
+	public List<MyTripDto> getMyAttractions(MyTripDto myTripDto) throws Exception {
+		return attractionMapper.getMyAttractions(myTripDto);
 	}
 	
 
 	@Override
 	@Transactional
-	public boolean addAttraction(MyTripDto mdto) throws Exception {
-		return adao.addAttraction(mdto);
+	public boolean addAttraction(MyTripDto myTripDto) throws Exception {
+		return attractionMapper.addAttraction(myTripDto);
 	}
 
 
 	@Override
 	@Transactional
 	public int getMyTripMax(String id) throws Exception {
-		return adao.getMyTripMax(id);
+		return attractionMapper.getMyTripMax(id);
 	}
 
 
 	@Override
 	@Transactional
 	public List<Integer> getMyTripAll(String id) throws Exception {
-		return adao.getMyTripAll(id);
+		return attractionMapper.getMyTripAll(id);
 	}
 
 
 	@Override
 	@Transactional
 	public void deleteMyTripAll(MyTripDto myTripDto) throws Exception {
-		adao.deleteMyTripAll(myTripDto);
+		attractionMapper.deleteMyTripAll(myTripDto);
 	}
 
 
 	@Override
 	@Transactional
 	public void deleteMyTrip(int no) throws Exception {
-		adao.deleteMyTrip(no);
+		attractionMapper.deleteMyTrip(no);
 	}
 
 
@@ -67,7 +65,7 @@ public class AttractionServiceImpl implements IAttractionService {
 	@Transactional
 	public void addMyTripAll(MyTripDto[] list) throws Exception {
 		for (int i = 0; i < list.length; i++) {
-			adao.addAttraction(list[i]);
+			attractionMapper.addAttraction(list[i]);
 		}
 	}
 

@@ -13,14 +13,13 @@ import com.ssafy.user.model.mapper.UserMapper;
 import com.ssafy.util.PageNavigation;
 import com.ssafy.util.SizeConstant;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements IUserService {
-	private UserMapper userMapper;
-	
-	public UserServiceImpl(UserMapper userMapper) {
-		super();
-		this.userMapper = userMapper;
-	}
+	private final UserMapper userMapper;
+
 
 	@Override
 	@Transactional

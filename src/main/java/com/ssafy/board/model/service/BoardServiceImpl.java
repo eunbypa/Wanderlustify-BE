@@ -12,15 +12,14 @@ import com.ssafy.board.model.mapper.BoardMapper;
 import com.ssafy.util.PageNavigation;
 import com.ssafy.util.SizeConstant;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class BoardServiceImpl implements IBoardService {
 
 	private BoardMapper boardMapper;
 
-	public BoardServiceImpl(BoardMapper boardMapper) {
-		super();
-		this.boardMapper = boardMapper;
-	}
 
 	@Override
 	@Transactional

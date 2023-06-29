@@ -14,16 +14,15 @@ import com.ssafy.hotplace.model.mapper.HotPlaceMapper;
 import com.ssafy.util.PageNavigation;
 import com.ssafy.util.SizeConstant;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class HotPlaceServiceImpl implements IHotPlaceService {
 	
-	private HotPlaceMapper hotplaceMapper;
+	private final HotPlaceMapper hotplaceMapper;
 
-	
-	public HotPlaceServiceImpl(HotPlaceMapper hotplaceMapper) {
-		super();
-		this.hotplaceMapper = hotplaceMapper;
-	}
+
 
 	@Override
 	@Transactional

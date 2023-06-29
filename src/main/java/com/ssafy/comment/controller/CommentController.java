@@ -26,19 +26,18 @@ import com.ssafy.comment.model.CommentDto;
 import com.ssafy.comment.model.service.ICommentService;
 import com.ssafy.user.model.UserDto;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
+@RequiredArgsConstructor
 @CrossOrigin("*")
 @RequestMapping("/comment")
 public class CommentController {
 	private final Logger logger = LoggerFactory.getLogger(CommentController.class);
-	private ICommentService commentService;
+	private final ICommentService commentService;
 	private static final String SUCCESS = "success";
 	private static final String FAIL = "fail";
-	
-	public CommentController(ICommentService commentService) {
-		super();
-		this.commentService = commentService;
-	}
+
 	
 	@PostMapping("/")
 	public ResponseEntity<?> write(@RequestBody CommentDto commentDto){

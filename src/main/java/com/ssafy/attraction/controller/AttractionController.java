@@ -36,53 +36,48 @@ import com.ssafy.attraction.model.service.AttractionServiceImpl;
 import com.ssafy.attraction.model.service.IAttractionService;
 import com.ssafy.user.model.UserDto;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
+@RequiredArgsConstructor
 @CrossOrigin("*")
 @RequestMapping("/attraction")
 public class AttractionController {
 	private static final Logger logger = LoggerFactory.getLogger(AttractionController.class);
 
-	private final IAttractionService aservice;
+	private final IAttractionService attractionService;
 	
-	
-
-	
-	@Autowired
-	public AttractionController(IAttractionService aservice) {
-        this.aservice = aservice;
-    }
-
-
+	//mapping url 수정 후 프론트 쪽도 바꿔줘야 함!!!
 	// 나의 여행계획 추가 (1개)
-	@PostMapping("/addMyTrip")
+	@PostMapping("/")
 	public ResponseEntity<?> addMyTrip(@RequestBody MyTripDto myTripDto, HttpSession session) throws Exception {
 		logger.info("Welcome addmytrip! .");
-		aservice.addAttraction(myTripDto);
+		attractionService.addAttraction(myTripDto);
 		return new ResponseEntity<>(HttpStatus.OK);
 
 	}
 
 	// 나의 여행계획 추가 (전체)
-	@PostMapping("/addMyTripAll")
+	@PostMapping("/all")
 	public ResponseEntity<?> addMyTripAll(@RequestBody MyTripDto[] list) throws Exception {
 		logger.info("Welcome addmytripAll! .");
-		aservice.addMyTripAll(list);
+		attractionService.addMyTripAll(list);
 		return new ResponseEntity<>(HttpStatus.OK);
 
 	}
 
 
-	@GetMapping("/getMyTrip/{id}/{user_mytrip_no}")
+	@GetMapping("/{id}/{user_mytrip_no}")
 	public ResponseEntity<?> getMyTrip(@PathVariable("id") String id, @PathVariable("user_mytrip_no") int user_mytrip_no  ,HttpSession session) throws Exception {
-		List<MyTripDto> list = aservice.getMyAttractions(new MyTripDto(id, user_mytrip_no));
+		List<MyTripDto> list = attractionService.getMyAttractions(new MyTripDto(id, user_mytrip_no));
 		logger.info("Welcome getMytrip {}", list);
 		return new ResponseEntity<List<MyTripDto>>(list, HttpStatus.OK);
 	}
 
 	// 유저가 등록한 여행계획 중 가장 큰 번호
-	@GetMapping("/getMyTripMax/{id}")
+	@GetMapping("/max/{id}")
 	public ResponseEntity<?> getMyTripMax(@PathVariable("id") String id) throws Exception {
-		int max = aservice.getMyTripMax(id);
+		int max = attractionService.getMyTripMax(id);
 		logger.info("Welcome getMyTripMax {}", max);
 
 		return new ResponseEntity<Integer>(max, HttpStatus.OK);
@@ -90,26 +85,26 @@ public class AttractionController {
 	}
 
 	// 유저가 등록한 여행계획
-	@GetMapping("/getMyTripAll/{id}")
+	@GetMapping("/all/{id}")
 	public ResponseEntity<?> getMyTripCount(@PathVariable("id") String id) throws Exception { 
-		List<Integer> list = aservice.getMyTripAll(id);
+		List<Integer> list = attractionService.getMyTripAll(id);
 		logger.info("Welcome getMyTripAll {}", list);
 
 		return new ResponseEntity<List<Integer>>(list, HttpStatus.OK);
 	}
 
 	// 유저가 여행계획 삭제(전체)
-	@DeleteMapping("/deleteMyTripAll/{id}/{trip_no}")
+	@DeleteMapping("/all/{id}/{trip_no}")
 	public ResponseEntity<?> deleteMyTripAll(@PathVariable("id") String id, @PathVariable("trip_no") int trip_no) throws Exception {
-		aservice.deleteMyTripAll(new MyTripDto(id, trip_no));
+		attractionService.deleteMyTripAll(new MyTripDto(id, trip_no));
 		return new ResponseEntity<>(HttpStatus.OK);
 
 	}
 
 	// 유저가 여행계획 삭제(개별)
-	@DeleteMapping("/deleteMyTrip/{no}")
+	@DeleteMapping("/{no}")
 	public ResponseEntity<?> deleteMyTrip(@PathVariable("no") int no) throws Exception {
-		aservice.deleteMyTrip(no);
+		attractionService.deleteMyTrip(no);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 

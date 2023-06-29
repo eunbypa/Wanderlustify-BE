@@ -30,7 +30,10 @@ import com.ssafy.board.model.service.IBoardService;
 import com.ssafy.user.model.UserDto;
 import com.ssafy.util.PageNavigation;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
+@RequiredArgsConstructor
 @CrossOrigin("*")
 @RequestMapping("/board")
 public class BoardController {
@@ -39,12 +42,9 @@ public class BoardController {
 	private static final String SUCCESS = "success";
 	private static final String FAIL = "fail";
 	
-	private IBoardService boardService;
+	private final IBoardService boardService;
 
-	public BoardController(IBoardService boardService) {
-		super();
-		this.boardService = boardService;
-	}
+
 
 	/*
 	 * @GetMapping("/write") public String write(@RequestParam Map<String, String>
