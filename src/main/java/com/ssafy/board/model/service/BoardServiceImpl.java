@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BoardServiceImpl implements IBoardService {
 
-	private BoardMapper boardMapper;
+	private final BoardMapper boardMapper;
 
 
 	@Override
@@ -41,7 +41,7 @@ public class BoardServiceImpl implements IBoardService {
 		int start = pgNo * SizeConstant.LIST_SIZE - SizeConstant.LIST_SIZE;
 		param.put("start", start);
 		param.put("listsize", SizeConstant.LIST_SIZE);
-		if(map.get("type").equals("notice"))return boardMapper.noticelist(param); // 공지사항 
+		if(map.get("type").equals("notice"))return boardMapper.noticelist(param); // 공지사항
 		return boardMapper.boardlist(param); // 일반
 	}
 	
